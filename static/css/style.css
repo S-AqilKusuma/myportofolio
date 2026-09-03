@@ -21,7 +21,7 @@ body {
     line-height: 1.6;
 }
 
-h1, .brand {
+h1, h2, .brand {
     font-family: "Space Grotesk", -apple-system, sans-serif;
 }
 
@@ -69,7 +69,8 @@ h1, .brand {
     grid-template-columns: 1.3fr 1fr;
     grid-template-areas:
         "identity photo"
-        "details  photo";
+        "details  photo"
+        "skills skills";
     gap: 1.5rem 3rem;
 }
 
@@ -141,6 +142,47 @@ h1, .brand {
     background-color: var(--accent);
 }
 
+.hero-skills {
+    grid-area: skills;
+}
+
+.skills {
+    padding: 0.01rem;
+    max-height: 20rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    background-color: var(--accent-dark);
+    border-radius: var(--radius);
+}
+
+.skill-grid, .skill-logo, .skill-name, .skill-desc {
+    padding: 0.2rem;
+}
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: 5rem;
+    grid-template-rows: 5rem;
+    grid-template-areas:
+        "skill-logo skill-name"
+        "skill-desc skill-desc";
+    
+    margin: 0.5rem;
+    background-color: var(--accent);
+    border-radius: var(--radius);
+    
+}
+
+.skill-logo {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.skill-name {
+    align-self: center;
+}
+
 .hero-photo {
     grid-area: photo;
     align-self: center;
@@ -182,7 +224,8 @@ h1, .brand {
         grid-template-areas:
             "identity"
             "photo"
-            "details";
+            "details"
+            "skills";
     }
 
     .hero-photo {
