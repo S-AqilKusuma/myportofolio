@@ -164,8 +164,8 @@ h1, h2, .brand {
     grid-template-columns: 5rem;
     grid-template-rows: 5rem;
     grid-template-areas:
-        "skill-logo skill-name"
-        "skill-desc skill-desc";
+        "logo name"
+        "desc desc";
     
     margin: 0.5rem;
     background-color: var(--accent);
@@ -174,13 +174,19 @@ h1, h2, .brand {
 }
 
 .skill-logo {
+    grid-area: logo;
     height: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
 }
 
 .skill-name {
+    grid-area: name;
     align-self: center;
+}
+
+.skill-desc {
+    grid-area: desc;
 }
 
 .hero-photo {
