@@ -156,7 +156,10 @@ h1, summary, .brand {
     max-height: 10rem;
     /* overflow-y di-set menjadi scroll supaya bisa di-scroll 
      ketika isi dari elemen ini melewati tinggi maksimal */
-    overflow-y: scroll;  
+    overflow-y: scroll;
+    /* scroll-snap-type di-set menjadi y mandatory supaya scroll
+     akan snap sesuai property scroll-snap-align dari child element */
+    scroll-snap-type: y mandatory;
     /* scrollbar-width di-set none supaya scrollbar tidak terlihat */           
     scrollbar-width: none;
     border-radius: var(--radius);
@@ -164,6 +167,9 @@ h1, summary, .brand {
 
 .skill-detail {
     margin-bottom: 3px;
+    /* Scroll akan di-snap ke ujung atas elemen (kecuali sudah sampai
+     ujung bawah parent element) */
+    scroll-snap-align: start;
     background-color: var(--ink);
 }
 
@@ -177,9 +183,17 @@ h1, summary, .brand {
 }
 
 .skill-summary {
-    padding: 0.2rem 1rem;
+    padding: 0.5rem;
     font-size: x-large;
     background-color: var(--accent);
+    border-radius: var(--radius);
+}
+
+.skill-summary a {
+    height: 3cap;
+    padding: 3px;
+    margin: 0 0.5rem 0 0;
+    background-color: var(--paper);
     border-radius: var(--radius);
 }
 
@@ -196,11 +210,9 @@ details p {
 }
 
 .skill-logo {
-    margin: 0 0.5rem 0 0;
-    height: 3cap;
+    height: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 50%;
 }
 
 .hero-photo {
