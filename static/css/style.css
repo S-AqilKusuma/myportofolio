@@ -21,7 +21,7 @@ body {
     line-height: 1.6;
 }
 
-h1, h2, .brand {
+h1, summary, .brand {
     font-family: "Space Grotesk", -apple-system, sans-serif;
 }
 
@@ -146,47 +146,61 @@ h1, h2, .brand {
     grid-area: skills;
 }
 
-.skills {
-    padding: 0.01rem;
-    max-height: 20rem;
-    overflow-y: auto;
-    scrollbar-width: none;
-    background-color: var(--accent-dark);
+.skills-border {
+    padding: 3px;
+    background-color: var(--ink);
     border-radius: var(--radius);
 }
 
-.skill-grid, .skill-logo, .skill-name, .skill-desc {
-    padding: 0.2rem;
+.skills {
+    max-height: 10rem;
+    /* overflow-y di-set menjadi scroll supaya bisa di-scroll 
+     ketika isi dari elemen ini melewati tinggi maksimal */
+    overflow-y: scroll;  
+    /* scrollbar-width di-set none supaya scrollbar tidak terlihat */           
+    scrollbar-width: none;
+    border-radius: var(--radius);
 }
 
-.skill-grid {
-    display: grid;
-    grid-template-columns: 5rem;
-    grid-template-rows: 5rem;
-    grid-template-areas:
-        "logo name"
-        "desc desc";
-    
-    margin: 0.5rem;
+.skill-detail {
+    margin-bottom: 3px;
+    background-color: var(--ink);
+}
+
+.skill-detail:last-child {
+    margin-bottom: 0;
+}
+
+.skill-summary, details p {
+    display: flex;
+    align-items: center;
+}
+
+.skill-summary {
+    padding: 0.2rem 1rem;
+    font-size: x-large;
     background-color: var(--accent);
     border-radius: var(--radius);
-    
+}
+
+details p {
+    padding: 0.5rem 1rem;
+    background-color: var(--paper);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* Property di bawah akan diterapkan jika elemen <details>
+ dibuka */
+.skill-detail[open] .skill-summary {
+    border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .skill-logo {
-    grid-area: logo;
-    height: 100%;
+    margin: 0 0.5rem 0 0;
+    height: 3cap;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-}
-
-.skill-name {
-    grid-area: name;
-    align-self: center;
-}
-
-.skill-desc {
-    grid-area: desc;
+    border-radius: 50%;
 }
 
 .hero-photo {

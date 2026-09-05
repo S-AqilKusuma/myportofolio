@@ -56,25 +56,47 @@
                 <!-- Bagian skill -->
                 <div class="hero-skills">
                     <h1>Skills</h1>
-                    <!-- Bagian skill yang dapat di-scroll yang menampilkan setiap skill -->
-                    <div class="skills">
-                        <!-- Grid container untuk mengatur konten masing-masing skill -->
-                        <div class="container skill-grid">
-                            <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
-                            <h2 class="skill-name">Skill 1</h2>
-                            <p class="skill-desc">Skill 1 description.</p>
-                        </div>
-                        <div class="container skill-grid">
-                            <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
-                            <h2 class="skill-name">Skill 1</h2>
-                            <p class="skill-desc">Skill 1 description.</p>
-                        </div>
-                        <div class="container skill-grid">
-                            <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
-                            <h2 class="skill-name">Skill 1</h2>
-                            <p class="skill-desc">Skill 1 description.</p>
+                    <!-- Border dari class skills yang dipisah supaya tidak terbawa
+                     ketika class skills di-scroll -->
+                    <div class="skills-border">
+                        <!-- Bagian skill yang dapat di-scroll yang menampilkan setiap skill -->
+                        <div class="skills">
+                            <!-- Bagian yang dapat di klik untuk menampikan detail skill.
+                             Atribut name diberikan supaya hanya satu detail skill yang
+                             dapat dibuka dalam satu waktu. -->
+                            <details class="skill-detail" name="skill">
+                                <!-- Nama skill beserta logonya -->
+                                <summary class="skill-summary">
+                                    <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
+                                    Skill 1
+                                </summary>
+                                <!-- Detail skill yang dipisah elemen <details> -->
+                                <p>Skill 1 description.</p>
+                            </details>
+                            <details class="skill-detail" name="skill">
+                                <summary class="skill-summary">
+                                    <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
+                                    Skill 1
+                                </summary>
+                                <p>Skill 1 description.</p> 
+                            </details>
+                            <details class="skill-detail" name="skill">
+                                <summary class="skill-summary">
+                                    <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
+                                    Skill 1
+                                </summary>
+                                <p>Skill 1 description.</p> 
+                            </details>
+                            <details class="skill-detail" name="skill">
+                                <summary class="skill-summary">
+                                    <img class="skill-logo" src="/static/img/profile.jpeg" alt="Skill 1 Logo">
+                                    Skill 1
+                                </summary>
+                                <p>Skill 1 description.</p> 
+                            </details>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </section>
