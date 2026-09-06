@@ -29,7 +29,7 @@ HTML:
 - \<details> HTML details disclosure element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
 - \<div> HTML content division element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div
 - \<img> HTML image embed element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img
-- \<p> HTML paragraph element: 
+- \<p> HTML paragraph element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p
 - \<section> HTML generic section element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/section
 - \<summary> HTML disclosure summary element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/summary
 
