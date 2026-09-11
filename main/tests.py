@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience
+from main.models import Skill
 
 
 class MainTest(TestCase):
@@ -11,6 +12,14 @@ class MainTest(TestCase):
             title="Game Development",
             description="Mencoba membuat game dengan menggunakan Godot V4.4.1.",
             category="freelance",
+        )
+
+        self.skill = Skill.objects.create(
+            title="Java",
+            description="Experienced at programming using Java, Java's library, \
+                and Java own's OOP implementation at an intermediate level.",
+            image="static/img/Java.png",
+            image_source="https://techicons.dev/icons/java"
         )
 
     def test_main_url_is_accessible(self):
@@ -56,3 +65,8 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+    def test_skill_model(self):
+        self.assertEqual(str(self.skill), "Java")
+        self.assertEqual(self.skill.image, "static/img/Java.png")
+        self.assertEqual(self.skill.image_source, "https://techicons.dev/icons/java")

@@ -24,3 +24,13 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Skill(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(unique=True, max_length=255)
+    description = models.TextField()
+    # ImageField menyimpan image untuk logo skill.
+    image = models.ImageField(blank=True, null=True)
+    image_source = models.URLField(blank=True, null=True)
+    def __str__(self):
+        return self.title
