@@ -5,6 +5,7 @@
 }
 
 :root {
+    --white: #ffffff;
     --ink: #1c1917;
     --paper: #faf6f0;
     --accent: #d95d39;
@@ -69,8 +70,7 @@ h1, summary, .brand {
     grid-template-columns: 1.3fr 1fr;
     grid-template-areas:
         "identity photo"
-        "details  photo"
-        "skills .";
+        "details  photo";
     gap: 1.5rem 3rem;
 }
 
@@ -142,80 +142,6 @@ h1, summary, .brand {
     background-color: var(--accent);
 }
 
-.hero-skills {
-    grid-area: skills;
-}
-
-.skills-border {
-    padding: 3px;
-    background-color: var(--ink);
-    border-radius: var(--radius);
-}
-
-.skills {
-    max-height: 15rem;
-    /* overflow-y di-set menjadi scroll supaya bisa di-scroll 
-     ketika isi dari elemen ini melewati tinggi maksimal */
-    overflow-y: scroll;
-    /* scroll-snap-type di-set menjadi y mandatory supaya scroll
-     akan snap sesuai property scroll-snap-align dari child element */
-    scroll-snap-type: y mandatory;
-    /* scrollbar-width di-set none supaya scrollbar tidak terlihat */           
-    scrollbar-width: none;
-    border-radius: var(--radius);
-}
-
-.skill-detail {
-    margin-bottom: 3px;
-    /* Scroll akan di-snap ke ujung atas elemen (kecuali sudah sampai
-     ujung bawah parent element) */
-    scroll-snap-align: start;
-    background-color: var(--ink);
-}
-
-.skill-detail:last-child {
-    margin-bottom: 0;
-}
-
-.skill-summary, details p {
-    display: flex;
-    align-items: center;
-}
-
-.skill-summary {
-    padding: 0.5rem;
-    font-size: x-large;
-    color: var(--paper);
-    background-color: var(--accent-dark);
-    border-radius: var(--radius);
-}
-
-.skill-summary a {
-    height: 3cap;
-    padding: 3px;
-    margin: 0 0.5rem 0 0;
-    background-color: var(--paper);
-    border-radius: var(--radius);
-}
-
-details p {
-    padding: 0.5rem 1rem;
-    background-color: var(--paper);
-    border-radius: 0 0 var(--radius) var(--radius);
-}
-
-/* Property di bawah akan diterapkan jika elemen <details>
- dibuka */
-.skill-detail[open] .skill-summary {
-    border-radius: var(--radius) var(--radius) 0 0;
-}
-
-.skill-logo {
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-}
-
 .hero-photo {
     grid-area: photo;
     align-self: center;
@@ -257,8 +183,7 @@ details p {
         grid-template-areas:
             "identity"
             "photo"
-            "details"
-            "skills";
+            "details";
     }
 
     .hero-photo {
@@ -270,7 +195,7 @@ details p {
     }
 }
 
-.experience-section {
+.experience-section, .skill-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
@@ -288,15 +213,21 @@ details p {
     font-size: 2rem;
 }
 
-.experience-grid {
+.experience-grid, .skill-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
+}
+
+.experience-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .experience-card {
     padding: 1.25rem;
-    background-color: #fff;
+}
+
+.experience-card, .skill-detail {
+    background-color: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
 }
@@ -314,6 +245,7 @@ details p {
 }
 
 .experience-description,
+.skill-detail p,
 .empty-state {
     color: var(--text-muted);
 }
@@ -322,4 +254,43 @@ details p {
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+.skill-summary, .skill-detail p {
+    display: flex;
+    align-items: center;
+}
+
+.skill-summary {
+    height: fit-content;
+    padding: 0.5rem;
+    font-size: x-large;
+    color: var(--white);
+    background-color: var(--accent-dark);
+    border-radius: var(--radius);
+}
+
+.skill-summary a {
+    height: 3ch;
+    padding: 3px;
+    margin: 0 0.5rem 0 0;
+    background-color: var(--white);
+    border-radius: var(--radius);
+}
+
+.skill-detail p {
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* Property di bawah akan diterapkan jika elemen <details>
+ dibuka */
+.skill-detail[open] .skill-summary {
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.skill-logo {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
