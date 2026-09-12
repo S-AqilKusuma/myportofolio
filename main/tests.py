@@ -16,8 +16,8 @@ class MainTest(TestCase):
 
         self.skill = Skill.objects.create(
             title="Java",
-            description="Experienced at programming using Java, Java's library, \
-                and Java own's OOP implementation at an intermediate level.",
+            description="Experienced at programming using Java, Java library, \
+                and Java OOP implementation at an intermediate level.",
             image="static/img/Java.png",
             image_source="https://techicons.dev/icons/java"
         )
@@ -50,6 +50,7 @@ class MainTest(TestCase):
         self.assertContains(response, "Freelance")
         self.assertContains(response, "Sedang berlangsung")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
+        self.assertContains(response, f'href="{reverse("main:show_skill")}"')
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
@@ -70,3 +71,25 @@ class MainTest(TestCase):
         self.assertEqual(str(self.skill), "Java")
         self.assertEqual(self.skill.image, "static/img/Java.png")
         self.assertEqual(self.skill.image_source, "https://techicons.dev/icons/java")
+
+    def test_skill_page(self):
+        response = self.client.get(reverse("main:show_skill"))
+
+        # Tes muncul tidaknya halaman
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "skill.html")
+        # Tes muncul tidaknya data skill
+        self.assertContains(response, self.skill.title)
+        self.assertContains(response, self.skill.description)
+        self.assertContains(response, self.skill.image)
+        self.assertContains(response, self.skill.image_source)
+        # Tes Navbar
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+        self.assertContains(response, f'href="{reverse("main:show_experience")}"')
+
+    # Tes halaman jika skill masih kosong
+    def test_empty_skill_page(self):
+        Skill.objects.all().delete()
+        response = self.client.get(reverse("main:show_skill"))
+
+        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
