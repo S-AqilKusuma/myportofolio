@@ -157,3 +157,13 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# CSRF
+# https://docs.djangoproject.com/en/6.1/ref/csrf/
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://sayyid-aqil-myportofolio.pws.cs.ui.ac.id",
+]
+
+CSRF_COOKIE_SECURE    = True
+SESSION_COOKIE_SECURE = True
