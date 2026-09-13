@@ -12,6 +12,7 @@ Kelas : PBP C
 2. Ketika saya ingin menambahkan \<section> untuk skill, saya sempat berpikir bahwa skill-skill tersebut bisa saja memakan banyak sekali ruang jika skill yang saya punya sudah sangat banyak, apalagi ditambah deskripsi dari masing-masing skill. Ketika memikirkan hal itu, saya teringat tentang bagian dari web yang bisa di-scroll secara independen terlepas dari keseluruhan halaman web seperti yang ada di Youtube ketika saya sedang mendengarkan playlist lagu saya. Jadi, saya membuat bagian tersebut bisa di-scroll dengan menggunakan property overflow-y: scroll. Properti ini menyebabkan elemen tersebut dapat di-scroll ketika tinggi kumulatif dari semua anak-anak dari elemen itu melebihi tinggi maksimal yang saya tetapkan, yaitu 15rem. Saya juga menerapkankan snapping ke ujung atas dari masing-masing anak elemen ketika elemen tersebut di-scroll. Selain itu, saya juga memberikan ruang kosong di sebelah kanan dari \<section class="hero-skills>"> supaya saya punya ruang tambahan untuk menambahkan bagian lain ke depannya.
 
 3. Batasan yang saya paling rasakan ketika membuat \<section> baru ini adalah ketika saya harus menambahkan skill   satu per satu. Bayangkan saya jika saya harus menambahkan 20 skill dalam satu waktu. Itu pun belum memperhitungkan panjangnya file .html. Hal itu akan membuat saya kesulitan menambahkan fitur baru untuk web saya. Karena itu, fungsi dinamis yang paling saya inginkan untuk saat ini adalah saya bisa menyimpan data dari skill saya di dalam suatu database sehingga saya tidak perlu mengutak-atik file .html dari web saya.
+3. Batasan yang saya paling rasakan ketika membuat \<section> baru ini adalah ketika saya harus menambahkan skill   satu per satu. Bayangkan saya jika saya harus menambahkan 20 skill dalam satu waktu. Itu pun belum memperhitungkan panjangnya file .html. Hal itu akan membuat saya kesulitan menambahkan fitur baru untuk web saya. Karena itu, fungsi dinamis yang paling saya inginkan untuk saat ini adalah saya bisa menyimpan data dari skill saya di dalam suatu database sehingga saya tidak perlu mengutak-atik file .html dari web saya.
 
 
 ### AI USAGE
@@ -76,11 +77,26 @@ Django:
 - SESSION_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#session-cookie-secure
 
 
+Django:
+- Model field reference: https://docs.djangoproject.com/en/6.1/ref/models/fields/
+- ImageField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.ImageField
+- URLField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.URLField
+- CSRF_TRUSTED_ORIGINS setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
+- CSRF_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_COOKIE_SECURE
+- SESSION_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#session-cookie-secure
+
+
 W3Schools:
 - How TO - Horizontal Scroll Menu: https://www.w3schools.com/howto/howto_css_menu_horizontal_scroll.asp
 - An image as a link - W#Schools Tryit Editor: https://www.w3schools.com/html/tryit.asp?filename=tryhtml_links_image
 
 
+GitHub:
+- Menambahkan Data ke Database PWS melalui Django Admin: https://gist.github.com/RedStone576/90f5eb53acae3bc668d2ef3ea9205e3c
+
+
+Discord:
+- Push Github & PWS: https://discord.com/channels/1527297203759087637/1544345261755605023
 GitHub:
 - Menambahkan Data ke Database PWS melalui Django Admin: https://gist.github.com/RedStone576/90f5eb53acae3bc668d2ef3ea9205e3c
 
