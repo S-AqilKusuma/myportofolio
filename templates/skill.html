@@ -1,65 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill - {{ name }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <header class="site-header">
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Skill - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+<main>
+    <section class="skill-section" id="skill">
         <div class="container">
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
-            <nav>
-                <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="{% url 'main:show_experience' %}">Experience</a>
-                <a href="{% url 'main:show_skill' %}">Skill</a>
-            </nav>
-        </div>
-    </header>
+            <h1>Skill</h1>
 
-    <main>
-        <section class="skill-section" id="skill">
-            <div class="container">
-                <h1>Skill</h1>
-
-                <div class="skill-grid">
-                    {% for skill in skill_list %}
-                        <!-- Bagian yang dapat di klik untuk menampikan deskripsi skill.
-                         Atribut name diberikan supaya hanya satu deskripsi skill yang
-                         dapat dibuka dalam satu waktu. -->
-                        <details class="skill-detail" name="skill">
-                            <!-- Nama skill beserta logonya jika ada-->
-                            <summary class="skill-summary">
-                                {% if skill.image %}
-                                    <!-- Memberikan link asal dari gambar jika ada -->
-                                    {% if skill.image_source %}
-                                        <a href="{{ skill.image_source }}">
-                                    {% endif %}
-                                    <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo"></a>
+            <div class="skill-grid">
+                {% for skill in skill_list %}
+                    <!-- Bagian yang dapat di klik untuk menampikan deskripsi skill.
+                        Atribut name diberikan supaya hanya satu deskripsi skill yang
+                        dapat dibuka dalam satu waktu. -->
+                    <details class="skill-detail" name="skill">
+                        <!-- Nama skill beserta logonya jika ada-->
+                        <summary class="skill-summary">
+                            {% if skill.image %}
+                                <!-- Memberikan link asal dari gambar jika ada -->
+                                {% if skill.image_source %}
+                                    <a href="{{ skill.image_source }}">
                                 {% endif %}
-                                {{ skill.title }}
-                            </summary>
-                            <!-- Deskripsi skill yang dipisah dari elemen <details> -->
-                            <p>{{ skill.description }}</p>
-                        </details>
-                    {% empty %}
-                        <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
-                        </p>
-                    {% endfor %}
-                </div>
+                                <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo"></a>
+                            {% endif %}
+                            {{ skill.title }}
+                        </summary>
+                        <!-- Deskripsi skill yang dipisah dari elemen <details> -->
+                        <p>{{ skill.description }}</p>
+                    </details>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada pengalaman yang ditambahkan.
+                    </p>
+                {% endfor %}
             </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
-    </footer>
-</body>
-</html>
+    </section>
+</main>
+{% endblock content %}
