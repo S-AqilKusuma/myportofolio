@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, DateTimeInput
+from django.forms import ModelForm, CharField, TextInput, Textarea, URLInput, Select, DateTimeInput
 
 from main.models import Experience
 
@@ -46,3 +46,5 @@ class ExperienceForm(ModelForm):
                 }
             ),
         }
+
+    password = CharField(label="Password",widget=TextInput)

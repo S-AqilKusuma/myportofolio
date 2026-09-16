@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from dotenv import dotenv_values
 
 from main.models import Experience, Skill
 from main.forms import ExperienceForm
@@ -47,7 +48,9 @@ def show_skill(request):
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
 
-    if request.method == "POST" and form.is_valid():
+    if (request.method == "POST" 
+        and form.is_valid() 
+        and dotenv_values().get("PASSWORD") == form.cleaned_data["password"]):
         form.save()
         messages.success(request, "Pengalaman baru berhasil ditambahkan!")
         return redirect("main:show_experience")
