@@ -1,6 +1,6 @@
-from django.forms import ModelForm, CharField, TextInput, Textarea, URLInput, Select, DateTimeInput
+from django.forms import ModelForm, CharField, TextInput, Textarea, URLInput, FileInput, Select, DateTimeInput
 
-from main.models import Experience
+from main.models import Experience, Skill
 
 class ExperienceForm(ModelForm):
     class Meta:
@@ -41,6 +41,50 @@ class ExperienceForm(ModelForm):
                 }
             ),
             "ended_at": DateTimeInput(
+                attrs={
+                    "required": False,
+                }
+            ),
+        }
+
+    password = CharField(label="Password",widget=TextInput)
+
+class SkillForm(ModelForm):
+    class Meta:
+        model = Skill
+        fields = [
+            "title",
+            "description",
+            "image",
+            "image_source",
+        ]
+
+        labels = {
+            "title": "Nama",
+            "description": "Deskripsi",
+            "image": "Logo",
+            "image_source": "Sumber Logo",
+        }
+
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Masukan Nama Skill",
+                    "maxlength": 255,
+                }
+            ),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "Deskripsikan Skillmu",
+                    "rows": 3,
+                }
+            ),
+            "image": FileInput(
+                attrs={
+                    "required": False,
+                }
+            ),
+            "image_source": URLInput(
                 attrs={
                     "required": False,
                 }
