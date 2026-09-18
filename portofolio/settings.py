@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
     'main'
 ]
 
@@ -167,3 +168,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CSRF_COOKIE_SECURE    = True
 SESSION_COOKIE_SECURE = True
+
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
