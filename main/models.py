@@ -30,7 +30,7 @@ class Skill(models.Model):
     title = models.CharField(unique=True, max_length=255)
     description = models.TextField()
     # ImageField menyimpan image untuk logo skill.
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(upload_to="images/", blank=True, null=True)
     image_source = models.URLField(blank=True, null=True)
     def __str__(self):
         return self.title
