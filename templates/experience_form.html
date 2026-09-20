@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block meta %}
-    <title>Add Project - {{ name }}</title>
+    <title>Add Experience - {{ name }}</title>
 {% endblock meta %}
 
 {% block content %}
@@ -10,8 +10,8 @@
             <div class="container">
                 <h1>Add New Experience</h1>
                 <form method="post"
-                      action="{% url 'main:create_experience' %}"
-                      class="experience-form">
+                    action="{% url 'main:create_experience' %}"
+                    class="experience-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
@@ -22,7 +22,7 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    <button type="submit" class="button">Tambah Project</button>
+                    <button type="submit" class="button">Tambah Experience</button>
                     <a href="{% url 'main:show_experience' %}" class="button button-secondary">Batal</a>
                 </form>
             </div>

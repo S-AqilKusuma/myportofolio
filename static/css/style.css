@@ -177,7 +177,8 @@ h1, summary, .brand {
     border-top: 1px solid var(--line);
 }
 
-.experience-section, .skill-section {
+.experience-section,
+.skill-section {
     padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
@@ -191,7 +192,7 @@ h1, summary, .brand {
 }
 
 .experience-header,
-.header {
+.skill-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -201,31 +202,27 @@ h1, summary, .brand {
 }
 
 .experience-header h1,
-.header h1 {
+.skill-header h1 {
     margin-bottom: 0;
 }
 
-.experience-add-button,
 .add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.experience-add-button span,
 .add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
-.experience-search,
 .search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.experience-search__input,
 .search__input {
     width: 100%;
     min-width: 0;
@@ -237,13 +234,13 @@ h1, summary, .brand {
     font: inherit;
 }
 
-.experience-search__input:focus,
 .search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
 
-.experience-grid, .skill-grid {
+.experience-grid,
+.skill-grid {
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -251,9 +248,6 @@ h1, summary, .brand {
 
 .experience-card {
     padding: 1.25rem;
-}
-
-.experience-card {
     background-color: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
@@ -276,14 +270,12 @@ h1, summary, .brand {
     color: var(--text-muted);
 }
 
-.experience-status,
-.status {
+.experience-status {
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.experience-actions,
 .actions {
     display: flex;
     align-items: center;
@@ -292,7 +284,6 @@ h1, summary, .brand {
     margin-top: 1rem;
 }
 
-.experience-actions .button,
 .actions .button {
     font-size: 0.85rem;
     font-weight: 600;
@@ -304,7 +295,18 @@ h1, summary, .brand {
     margin-top: auto;
 }
 
-.experience-delete-modal,
+.scrollable {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -314,20 +316,17 @@ h1, summary, .brand {
     max-width: none;
     max-height: none;
     margin: 0;
-    padding: 1rem;
     border: 0;
-    background: transparent;
-    z-index: 10;
     align-items: center;
     justify-content: center;
+    background: transparent;
+    z-index: 10;
 }
 
-.experience-delete-modal:popover-open, 
 .modal:popover-open {
     display: flex;
 }
 
-.experience-delete-modal__backdrop,
 .modal__backdrop {
     position: absolute;
     inset: 0;
@@ -339,14 +338,12 @@ h1, summary, .brand {
     cursor: default;
 }
 
-.experience-delete-modal__content,
 .modal__content {
     position: relative;
     z-index: 1;
     width: min(100%, 480px);
     padding: 1.5rem;
     background: var(--paper);
-    border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
 }
@@ -360,7 +357,6 @@ h1, summary, .brand {
     font-size: 1.5rem;
 }
 
-.experience-delete-modal__close,
 .modal__close {
     position: absolute;
     top: 1rem;
@@ -374,7 +370,6 @@ h1, summary, .brand {
     cursor: pointer;
 }
 
-.experience-delete-modal__actions,
 .modal__actions {
     display: flex;
     justify-content: flex-end;
@@ -382,10 +377,20 @@ h1, summary, .brand {
     margin-top: 1.5rem;
 }
 
-.skill-info-button, .modal__body {
+.modal__body {
     height: 100%;
     width: 100%;
+}
+
+.modal__body,
+.skill-info-button h2,
+.modal__header h2 {
     word-wrap: break-word;
+}
+
+.skill-info-button h2,
+.modal__header h2 {
+    max-width: 80%;
 }
 
 .skill-info-button,
@@ -397,6 +402,10 @@ h1, summary, .brand {
     color: var(--white);
     background-color: var(--accent-dark);
     border-radius: var(--radius);
+}
+
+.modal__header {
+    border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .skill-info-modal__content {
@@ -425,7 +434,8 @@ h1, summary, .brand {
     border-radius: var(--radius);
 }
 
-.experience-form {
+.experience-form,
+.skill-form {
     width: 100%;
     max-width: 100%;
     margin-top: 1.5rem;
@@ -515,46 +525,39 @@ h1, summary, .brand {
     }
 
     .experience-header,
-    .header {
+    .skill-header {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .experience-add-button,
     .add-button {
         width: 100%;
         justify-content: center;
     }
 
-    .experience-search,
     .search {
         flex-direction: column;
     }
 
-    .experience-search .button,
     .search .button {
         width: 100%;
     }
 
-    .experience-delete-modal,
     .modal {
         align-items: flex-end;
         padding: 0;
     }
 
-    .experience-delete-modal__content,
     .modal__content {
         width: 100%;
         padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
     }
 
-    .experience-delete-modal__actions,
     .modal__actions {
         flex-direction: column-reverse;
     }
 
-    .experience-delete-modal__actions .button,
     .modal__actions .button {
         width: 100%;
         text-align: center;

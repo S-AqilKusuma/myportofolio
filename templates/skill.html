@@ -1,56 +1,56 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Skill - {{ name }}</title>
+    <title>Skill - {{ name }}</title>
 {% endblock meta %}
 
 {% block content %}
-<main>
-    <section class="skill-section" id="skill">
-        <div class="container">
-            <header class="skill-header header">
-                <h1>Skill</h1>
-                <a href="{% url 'main:create_skill' %}"
-                    class="button add-button skill-add-button">
-                    <span aria-hidden="true">+</span>
-                    Tambah Skill
-                </a>
-            </header>
+    <main>
+        <section class="skill-section" id="skill">
+            <div class="container">
+                <header class="skill-header">
+                    <h1>Skill</h1>
+                    <a href="{% url 'main:create_skill' %}"
+                        class="button add-button skill-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Skill
+                    </a>
+                </header>
 
-            <form method="get"
-                action="{% url 'main:show_skill' %}"
-                class="search skill-search">
-                <input type="search"
-                    name="title"
-                    value="{{ title_query }}"
-                    placeholder="Cari berdasarkan nama skill"
-                    class="search__input skill-search__input"
-                    aria-label="Cari berdasarkan nama skill">
-                <button type="submit" class="button">Cari</button>
-            </form>
+                <form method="get"
+                    action="{% url 'main:show_skill' %}"
+                    class="search skill-search">
+                    <input type="search"
+                        name="title"
+                        value="{{ title_query }}"
+                        placeholder="Cari berdasarkan nama skill"
+                        class="search__input skill-search__input"
+                        aria-label="Cari berdasarkan nama skill">
+                    <button type="submit" class="button">Cari</button>
+                </form>
 
-            <div class="skill-grid">
-                {% for skill in skill_list %}
-                    <!-- Button yang dapat di klik untuk menampikan deskripsi skill. -->
-                    <button type="button"
-                        class="skill-info-button"
-                        popovertarget="info-skill-{{ skill.id }}"
-                        aria-label="Lihat {{ skill.title }}"
-                        title="Lihat skill">
-                        <!-- Nama skill beserta logonya jika ada-->
-                        {% if skill.image %}
-                            <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
-                        {% endif %}
-                        {{ skill.title }}
-                    </button>
-                    {% include "components/skill_info_modal.html" with skill=skill %}
-                {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
-                {% endfor %}
+                <div class="skill-grid">
+                    {% for skill in skill_list %}
+                        <!-- Button yang dapat di klik untuk menampikan deskripsi skill. -->
+                        <button type="button"
+                            class="skill-info-button"
+                            popovertarget="info-skill-{{ skill.id }}"
+                            aria-label="Lihat {{ skill.title }}"
+                            title="Lihat skill">
+                            <!-- Nama skill beserta logonya jika ada-->
+                            {% if skill.image %}
+                                <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
+                            {% endif %}
+                            <h2>{{ skill.title }}</h2>
+                        </button>
+                        {% include "components/skill_info_modal.html" with skill=skill %}
+                    {% empty %}
+                        <p class="empty-state">
+                            Belum ada pengalaman yang ditambahkan.
+                        </p>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 {% endblock content %}
