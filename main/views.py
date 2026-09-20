@@ -94,7 +94,7 @@ def show_skill(request):
     return render(request, "skill.html", context)
 
 def create_skill(request):
-    form = SkillForm(request.POST or None, request.FILES)
+    form = SkillForm(request.POST or None, request.FILES or None)
 
     if (request.method == "POST" 
         and form.is_valid() 
@@ -118,6 +118,25 @@ def get_skill_json(request):
 
     skill_json = serializers.serialize("json", skill)
     return HttpResponse(skill_json, content_type="application/json")
+
+def edit_skill(request, skill_id):
+    skill = get_object_or_404(Skill, pk=skill_id)
+    form = SkillForm(request.POST or None, request.FILES or None, instance=skill)
+
+    if (request.method == "POST" 
+        and form.is_valid() 
+        and os.getenv("PASSWORD") == form.cleaned_data["password"]):
+        form.save()
+        messages.success(request, "Skill baru berhasil ditambahkan!")
+        return redirect("main:show_skill")
+
+    context = {
+        "name": "Sayyid Aqil Kusuma",
+        "form": form,
+        "skill_id": skill_id,
+    }
+    return render(request, "skill_form.html", context)
+
 
 def delete_skill(request, skill_id):
     skill = get_object_or_404(Skill, pk=skill_id)

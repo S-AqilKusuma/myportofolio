@@ -6,6 +6,10 @@
         title="Hapus Skill">
         Hapus Skill
     </button>
+    <a href="{% url 'main:edit_skill' skill.id %}"
+        class="button add-button skill-add-button">
+        Edit Skill
+    </a>
 </p>
 <dialog id="delete-skill-{{ skill.id }}"
      class="skill-delete-modal modal"
@@ -14,10 +18,10 @@
      aria-modal="true"
      aria-labelledby="delete-skill-title-{{ skill.id }}">
     <button type="button"
-            class="skill-delete-modal__backdrop modal__backdrop"
-            popovertarget="delete-skill-{{ skill.id }}"
-            popovertargetaction="hide"
-            aria-label="Tutup konfirmasi hapus"></button>
+        class="skill-delete-modal__backdrop modal__backdrop"
+        popovertarget="delete-skill-{{ skill.id }}"
+        popovertargetaction="hide"
+        aria-label="Tutup konfirmasi hapus"></button>
     <div class="skill-delete-modal__content modal__content">
         <button type="button"
                 class="skill-delete-modal__close modal__close"
