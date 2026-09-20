@@ -190,7 +190,8 @@ h1, summary, .brand {
     text-transform: uppercase;
 }
 
-.experience-header {
+.experience-header,
+.header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -199,28 +200,33 @@ h1, summary, .brand {
     margin-bottom: 1.5rem;
 }
 
-.experience-header h1 {
+.experience-header h1,
+.header h1 {
     margin-bottom: 0;
 }
 
-.experience-add-button {
+.experience-add-button,
+.add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.experience-add-button span {
+.experience-add-button span,
+.add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
-.experience-search {
+.experience-search,
+.search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.experience-search__input {
+.experience-search__input,
+.search__input {
     width: 100%;
     min-width: 0;
     padding: 0.7rem;
@@ -231,7 +237,8 @@ h1, summary, .brand {
     font: inherit;
 }
 
-.experience-search__input:focus {
+.experience-search__input:focus,
+.search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
@@ -239,9 +246,6 @@ h1, summary, .brand {
 .experience-grid, .skill-grid {
     display: grid;
     gap: 1rem;
-}
-
-.experience-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
@@ -249,7 +253,7 @@ h1, summary, .brand {
     padding: 1.25rem;
 }
 
-.experience-card, .skill-detail {
+.experience-card {
     background-color: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
@@ -268,18 +272,19 @@ h1, summary, .brand {
 }
 
 .experience-description,
-.skill-detail p,
 .empty-state {
     color: var(--text-muted);
 }
 
-.experience-status {
+.experience-status,
+.status {
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.experience-actions {
+.experience-actions,
+.actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -287,7 +292,8 @@ h1, summary, .brand {
     margin-top: 1rem;
 }
 
-.experience-actions .button {
+.experience-actions .button,
+.actions .button {
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -298,7 +304,8 @@ h1, summary, .brand {
     margin-top: auto;
 }
 
-.experience-delete-modal {
+.experience-delete-modal,
+.modal {
     display: none;
     position: fixed;
     inset: 0;
@@ -315,11 +322,13 @@ h1, summary, .brand {
     justify-content: center;
 }
 
-.experience-delete-modal:popover-open {
+.experience-delete-modal:popover-open, 
+.modal:popover-open {
     display: flex;
 }
 
-.experience-delete-modal__backdrop {
+.experience-delete-modal__backdrop,
+.modal__backdrop {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -330,7 +339,8 @@ h1, summary, .brand {
     cursor: default;
 }
 
-.experience-delete-modal__content {
+.experience-delete-modal__content,
+.modal__content {
     position: relative;
     z-index: 1;
     width: min(100%, 480px);
@@ -350,7 +360,8 @@ h1, summary, .brand {
     font-size: 1.5rem;
 }
 
-.experience-delete-modal__close {
+.experience-delete-modal__close,
+.modal__close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -363,50 +374,55 @@ h1, summary, .brand {
     cursor: pointer;
 }
 
-.experience-delete-modal__actions {
+.experience-delete-modal__actions,
+.modal__actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
     margin-top: 1.5rem;
 }
 
-.skill-summary, .skill-detail p {
-    display: flex;
-    align-items: center;
+.skill-info-button, .modal__body {
+    height: 100%;
+    width: 100%;
+    word-wrap: break-word;
 }
 
-.skill-summary {
-    height: fit-content;
-    padding: 0.5rem;
+.skill-info-button,
+.modal__header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1.5rem;
     font-size: x-large;
     color: var(--white);
     background-color: var(--accent-dark);
     border-radius: var(--radius);
 }
 
-.skill-summary a {
-    height: 3ch;
-    padding: 3px;
-    margin: 0 0.5rem 0 0;
-    background-color: var(--white);
-    border-radius: var(--radius);
+.skill-info-modal__content {
+    padding: 0;
 }
 
-.skill-detail p {
-    padding: 0.5rem 1rem;
-    border-radius: 0 0 var(--radius) var(--radius);
+.skill-info-button a,
+.skill-info-modal__header a {
+    overflow: hidden;
+    height: fit-content;
+    width: fit-content;
+    font-size: 0;
 }
 
-/* Property di bawah akan diterapkan jika elemen <details>
- dibuka */
-.skill-detail[open] .skill-summary {
-    border-radius: var(--radius) var(--radius) 0 0;
+.skill-info-modal__content p {
+    padding: 1.5rem;
 }
 
 .skill-logo {
-    height: 100%;
+    height: 3rem;
+    padding: 3px;
+    margin: 0 0.5rem 0 0;
     aspect-ratio: 1 / 1;
     object-fit: cover;
+    background-color: var(--white);
+    border-radius: var(--radius);
 }
 
 .experience-form {
@@ -498,40 +514,48 @@ h1, summary, .brand {
         justify-content: flex-start;
     }
 
-    .experience-header {
+    .experience-header,
+    .header {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .experience-add-button {
+    .experience-add-button,
+    .add-button {
         width: 100%;
         justify-content: center;
     }
 
-    .experience-search {
+    .experience-search,
+    .search {
         flex-direction: column;
     }
 
-    .experience-search .button {
+    .experience-search .button,
+    .search .button {
         width: 100%;
     }
 
-    .experience-delete-modal {
+    .experience-delete-modal,
+    .modal {
         align-items: flex-end;
         padding: 0;
     }
 
-    .experience-delete-modal__content {
+    .experience-delete-modal__content,
+    .modal__content {
         width: 100%;
         padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
     }
 
-    .experience-delete-modal__actions {
+    .experience-delete-modal__actions,
+    .modal__actions {
         flex-direction: column-reverse;
     }
 
-    .experience-delete-modal__actions .button {
+    .experience-delete-modal__actions .button,
+    .modal__actions .button {
         width: 100%;
         text-align: center;
     }

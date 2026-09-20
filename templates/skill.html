@@ -8,28 +8,42 @@
 <main>
     <section class="skill-section" id="skill">
         <div class="container">
-            <h1>Skill</h1>
+            <header class="skill-header header">
+                <h1>Skill</h1>
+                <a href="{% url 'main:create_skill' %}"
+                    class="button add-button skill-add-button">
+                    <span aria-hidden="true">+</span>
+                    Tambah Skill
+                </a>
+            </header>
+
+            <form method="get"
+                action="{% url 'main:show_skill' %}"
+                class="search skill-search">
+                <input type="search"
+                    name="title"
+                    value="{{ title_query }}"
+                    placeholder="Cari berdasarkan nama skill"
+                    class="search__input skill-search__input"
+                    aria-label="Cari berdasarkan nama skill">
+                <button type="submit" class="button">Cari</button>
+            </form>
 
             <div class="skill-grid">
                 {% for skill in skill_list %}
-                    <!-- Bagian yang dapat di klik untuk menampikan deskripsi skill.
-                        Atribut name diberikan supaya hanya satu deskripsi skill yang
-                        dapat dibuka dalam satu waktu. -->
-                    <details class="skill-detail" name="skill">
+                    <!-- Button yang dapat di klik untuk menampikan deskripsi skill. -->
+                    <button type="button"
+                        class="skill-info-button"
+                        popovertarget="info-skill-{{ skill.id }}"
+                        aria-label="Lihat {{ skill.title }}"
+                        title="Lihat skill">
                         <!-- Nama skill beserta logonya jika ada-->
-                        <summary class="skill-summary">
-                            {% if skill.image %}
-                                <!-- Memberikan link asal dari gambar jika ada -->
-                                {% if skill.image_source %}
-                                    <a href="{{ skill.image_source }}">
-                                {% endif %}
-                                <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo"></a>
-                            {% endif %}
-                            {{ skill.title }}
-                        </summary>
-                        <!-- Deskripsi skill yang dipisah dari elemen <details> -->
-                        <p>{{ skill.description }}</p>
-                    </details>
+                        {% if skill.image %}
+                            <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
+                        {% endif %}
+                        {{ skill.title }}
+                    </button>
+                    {% include "components/skill_info_modal.html" with skill=skill %}
                 {% empty %}
                     <p class="empty-state">
                         Belum ada pengalaman yang ditambahkan.

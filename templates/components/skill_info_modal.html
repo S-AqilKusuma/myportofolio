@@ -1,0 +1,36 @@
+<dialog id="info-skill-{{ skill.id }}"
+    class="skill-info-modal modal"
+    popover="auto"
+    aria-modal="true"
+    aria-labelledby="info-skill-title-{{ skill.id }}">
+    <button type="button"
+        class="skill-info-modal__backdrop modal__backdrop"
+        popovertarget="info-skill-{{ skill.id }}"
+        popovertargetaction="hide"
+        aria-label="Tutup info"></button>
+    <section class="skill-info-modal__content modal__content">
+        <header id="info-skill-header-{{ skill.id }}"
+            class="skill-info-modal__header modal__header">
+            <button type="button"
+                class="skill-info-modal__close modal__close"
+                popovertarget="info-skill-{{ skill.id }}"
+                popovertargetaction="hide"
+                aria-label="Tutup info">×</button>
+            {% if skill.image %}
+                <!-- Memberikan link asal dari gambar jika ada -->
+                {% if skill.image_source %}
+                    <a href="{{ skill.image_source }}">
+                        <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
+                    </a>
+                {% else %}
+                    <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
+                {% endif %}
+            {% endif %}
+            <h2 id="info-skill-title-{{ skill.id }}">{{ skill.title }}</h2>
+        </header>
+        <body class="skill-info-modal__body modal__body">
+            <p>{{ skill.description }}</p>
+        </body>
+        {% include "components/skill_delete_modal.html" with skill=skill %}
+    </section>
+</dialog>
