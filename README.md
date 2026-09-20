@@ -36,11 +36,26 @@ Sebenarnya saya tidak secara ekstrem menghindari penggunaan AI. Namun, saya berp
 Seperti tugas 1, saya tidak menggunakan AI dalam pengerjaan tugas ini. Kali ini saya hanya memindahkan skill \<section> yang saya buat sebelumnya ke halaman baru. Di awal, saya membaca Django documentation tentang fields yang ada di https://docs.djangoproject.com/en/6.1/ref/models/fields/ untuk mencari field untuk logo dan source dari logo skill. Dari web tersebut, saya menemukan dua field yang sesuai, yaitu ImageField dan URLField. Kemudian saya membuat model serupa dengan yang ada di tutorial 2 dengan field id, title, description, image, dan image_source. Untuk urls, views, dan tests, saya mengikuti langkah-langkah yang ada di tutorial 2. Saya juga mengikuti template experience.html dari tutorial 2 ketika membuat template skill.html dengan memindahkan isi skill \<section> yang lama ke template tersebut. Untuk CSS, saya hanya sedikit mengubah properti yang sudah ada. Saya juga meregistrasi model yang saya buat ke Django Admin dan mengkonfigurasi Django CSRF mengikuti link GitHub yang ada di Discord PBP 2026 Gasal di https://discord.com/channels/1527297203759087637/1544345261755605023.
 
 
+### Tugas 3
+
+1. Mengutip dari Django Documentation, ModelForm digunakan supaya kita tidak perlu mendefinisikan ulang Field yang sudah ada pada model yang sudah kita buat sebelumnya. Sementara itu, CSRF token digunakan sebagai perlindungan dari serangan CSRF.
+
+2. Mengutip dari W3schools, JSON umumnya memiliki ukuran yang lebih kecil dari XML sehingga lebih mudah ketika ingin ditransfer ke aplikasi lain. Selain itu, JSON secara langsung terpetakan ke nilai-nilai yang digunakan JavaScript.
+
+3. Ketika fungsi show, misalkan show_skill, dipanggil, fungsi tersebut akan memanggil fungsi get_skiil_json yang melakukan serialisasi terhadap Skill instance yang ada pada databse ke dalam JSON. Kemudian, get_skill_json akan mengembalikan data dalam bentuk JSON yang kemudian dideserialisasi dan diambil objeknya. Serialisasi ini perlu dilakukan jika kita ingin menggunakan datanya lintas aplikasi. Dengan menggunakan JSON, kita tidak perlu tahu model data yang digunakan di aplikasi asal data. Kita hanya perlu mengetahui struktur data yang ada di dalam data JSON tersebut.
+
+
+### AI Usage
+
+Seperti tugas-tugas sebelumnya, saya tidak menggunakan AI dalam pengerjaan tugas ini. Untuk mayoritas dari tugas ini, saya mengikuti tutorial 3. Selain itu, saya juga membaca Django Documentation, MDN Web Docs, W3Schools, dan GeeksForGeeks. Saya juga mencari-cari informasi dari forum Django dan StackOverflow.
+
+
 ### Referensi
 
 HTML:
 - \<a> HTML anchor element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a
 - \<details> HTML details disclosure element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
+- \<dialog> HTML dialog element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
 - \<div> HTML content division element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div
 - \<img> HTML image embed element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img
 - \<p> HTML paragraph element: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/p
@@ -74,11 +89,25 @@ Django:
 - CSRF_TRUSTED_ORIGINS setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
 - CSRF_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_COOKIE_SECURE
 - SESSION_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#session-cookie-secure
+- File Uploads: https://docs.djangoproject.com/en/6.1/topics/http/file-uploads/
+- Creating forms from models: https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/
+- Cross Site Request Forgery protection: https://docs.djangoproject.com/en/6.1/ref/csrf/
+- forms.ImageField is not working: https://forum.djangoproject.com/t/forms-imagefield-is-not-working/41905/8
 
 
 W3Schools:
 - How TO - Horizontal Scroll Menu: https://www.w3schools.com/howto/howto_css_menu_horizontal_scroll.asp
 - An image as a link - W#Schools Tryit Editor: https://www.w3schools.com/html/tryit.asp?filename=tryhtml_links_image
+- JavaScript JSON vs XML: https://www.w3schools.com/jS/js_json_xml.asp
+
+
+GeeksForGeeks:
+- Uploading images in Django - Python: https://www.geeksforgeeks.org/python/python-uploading-images-in-django/
+- Update View - Function based Views Django: https://www.geeksforgeeks.org/python/update-view-function-based-views-django/
+
+
+StackOverflow:
+- HTML modal dialog overflow: https://stackoverflow.com/questions/20872411/html-modal-dialog-overflow
 
 
 GitHub:
