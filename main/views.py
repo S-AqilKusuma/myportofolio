@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,6 +9,21 @@ import os
 from main.models import Experience, Skill
 from main.forms import ExperienceForm, SkillForm
 
+
+# Registration
+def register(request):
+    form = UserCreationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+        return redirect("main:login")
+
+    context = {
+        "name": "Sayyid Aqil Kusuma",
+        "form": form,
+    }
+    return render(request, "register.html", context)
 
 # Main
 def show_main(request):
