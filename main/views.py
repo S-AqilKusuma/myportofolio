@@ -47,7 +47,9 @@ def login_user(request):
 # Logout
 def logout_user(request):
     logout(request)
-    return redirect("main:show_main")
+    response = redirect("main:show_main")
+    response.delete_cookie('last_login')
+    return response
 
 # Main
 def show_main(request):
