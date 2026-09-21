@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import datetime
@@ -29,11 +31,13 @@ def register(request):
 # Login
 def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
+    next_value = request.GET.get("next", "main:show_main")
 
     if request.method == "POST" and form.is_valid():
         user = form.get_user()
         login(request, user)
-        response = redirect("main:show_main")
+        next_value = request.POST.get("next", "main:show_main")
+        response = redirect(next_value)
         response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         return response
 
@@ -41,6 +45,7 @@ def login_user(request):
     context = {
         "name": "Sayyid Aqil Kusuma",
         "form": form,
+        "next": next_value
     }
     return render(request, "login.html", context)
 
@@ -84,6 +89,7 @@ def show_experience(request):
     }
     return render(request, "experience.html", context)
 
+@login_required(login_url="/login/")
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
 
@@ -110,6 +116,7 @@ def get_experience_json(request):
     experience_json = serializers.serialize("json", experience)
     return HttpResponse(experience_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
@@ -138,6 +145,7 @@ def show_skill(request):
     }
     return render(request, "skill.html", context)
 
+@login_required(login_url="/login/")
 def create_skill(request):
     form = SkillForm(request.POST or None, request.FILES or None)
 
@@ -164,6 +172,7 @@ def get_skill_json(request):
     skill_json = serializers.serialize("json", skill)
     return HttpResponse(skill_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def edit_skill(request, skill_id):
     skill = get_object_or_404(Skill, pk=skill_id)
     form = SkillForm(request.POST or None, request.FILES or None, instance=skill)
@@ -182,7 +191,7 @@ def edit_skill(request, skill_id):
     }
     return render(request, "skill_form.html", context)
 
-
+@login_required(login_url="/login/")
 def delete_skill(request, skill_id):
     skill = get_object_or_404(Skill, pk=skill_id)
 
