@@ -51,6 +51,7 @@ def logout_user(request):
 
 # Main
 def show_main(request):
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
         "name": "Sayyid Aqil Kusuma",
         "npm": "2506596331",
@@ -59,6 +60,7 @@ def show_main(request):
             """A 3rd semester CS student at Universitas Indonesia. Aspiring to be a game developer.
             Planning to graduate with minimal GPA of 3.00 within 4 years of study period (or less)."""
         ),
+        "last_login": last_login,
     }
     return render(request, "index.html", context)
 
