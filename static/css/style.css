@@ -61,6 +61,11 @@ h1, summary, .brand {
     font-size: 0.95rem;
 }
 
+.nav-user {
+    color: var(--accent);
+    font-weight: bold;
+}
+
 .hero {
     padding: 4.5rem 0 5rem;
 }
