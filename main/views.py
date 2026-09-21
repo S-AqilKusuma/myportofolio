@@ -25,6 +25,20 @@ def register(request):
     }
     return render(request, "register.html", context)
 
+# Login
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:show_main")
+
+    context = {
+        "name": "Sayyid Aqil Kusuma",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
 # Main
 def show_main(request):
     context = {
