@@ -133,6 +133,18 @@ def delete_experience(request, experience_id):
 
     return redirect("main:show_experience")
 
+@login_required(login_url="/login/")
+def toggle_star_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+
+    return redirect("main:show_experience")
+
 # Skill
 def show_skill(request):
     json_response = get_skill_json(request)
@@ -213,5 +225,17 @@ def delete_skill(request, skill_id):
     if request.method == "POST":
         skill.delete()
         messages.success(request, "Skill berhasil dihapus!")
+
+    return redirect("main:show_skill")
+
+@login_required(login_url="/login/")
+def toggle_star_skill(request, skill_id):
+    skill = get_object_or_404(Skill, pk=skill_id)
+
+    if request.method == "POST":
+        if request.user in skill.starred_by.all():
+            skill.starred_by.remove(request.user)
+        else:
+            skill.starred_by.add(request.user)
 
     return redirect("main:show_skill")
