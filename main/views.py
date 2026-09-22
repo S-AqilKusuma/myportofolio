@@ -193,7 +193,7 @@ def edit_skill(request, skill_id):
         and form.is_valid() 
         and os.getenv("PASSWORD") == form.cleaned_data["password"]):
         form.save()
-        messages.success(request, "Skill baru berhasil ditambahkan!")
+        messages.success(request, "Skill berhasil diedit!")
         return redirect("main:show_skill")
 
     context = {

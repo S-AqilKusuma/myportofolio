@@ -7,6 +7,9 @@
 {% block content %}
     <main>
         <section class="hero" id="profile">
+            {% for message in messages %}
+                <p class="form-message">{{ message }}</p>
+            {% endfor %}
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
