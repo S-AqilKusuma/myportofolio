@@ -91,6 +91,9 @@ def show_experience(request):
 
 @login_required(login_url="/login/")
 def create_experience(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = ExperienceForm(request.POST or None)
 
     if (request.method == "POST" 
@@ -118,6 +121,9 @@ def get_experience_json(request):
 
 @login_required(login_url="/login/")
 def delete_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -147,6 +153,9 @@ def show_skill(request):
 
 @login_required(login_url="/login/")
 def create_skill(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = SkillForm(request.POST or None, request.FILES or None)
 
     if (request.method == "POST" 
@@ -174,6 +183,9 @@ def get_skill_json(request):
 
 @login_required(login_url="/login/")
 def edit_skill(request, skill_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     skill = get_object_or_404(Skill, pk=skill_id)
     form = SkillForm(request.POST or None, request.FILES or None, instance=skill)
 
@@ -193,6 +205,9 @@ def edit_skill(request, skill_id):
 
 @login_required(login_url="/login/")
 def delete_skill(request, skill_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     skill = get_object_or_404(Skill, pk=skill_id)
 
     if request.method == "POST":
