@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,8 +8,6 @@ from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-import datetime
-import os
 
 from main.models import Experience, Skill
 from main.forms import ExperienceForm, SkillForm
@@ -96,9 +96,7 @@ def create_experience(request):
 
     form = ExperienceForm(request.POST or None)
 
-    if (request.method == "POST" 
-        and form.is_valid() 
-        and os.getenv("PASSWORD") == form.cleaned_data["password"]):
+    if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Pengalaman baru berhasil ditambahkan!")
         return redirect("main:show_experience")
@@ -170,9 +168,7 @@ def create_skill(request):
 
     form = SkillForm(request.POST or None, request.FILES or None)
 
-    if (request.method == "POST" 
-        and form.is_valid() 
-        and os.getenv("PASSWORD") == form.cleaned_data["password"]):
+    if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Skill baru berhasil ditambahkan!")
         return redirect("main:show_skill")
@@ -201,9 +197,7 @@ def edit_skill(request, skill_id):
     skill = get_object_or_404(Skill, pk=skill_id)
     form = SkillForm(request.POST or None, request.FILES or None, instance=skill)
 
-    if (request.method == "POST" 
-        and form.is_valid() 
-        and os.getenv("PASSWORD") == form.cleaned_data["password"]):
+    if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Skill berhasil diedit!")
         return redirect("main:show_skill")

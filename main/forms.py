@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, TextInput, Textarea, URLInput, FileInput, Select, DateTimeInput
+from django.forms import ModelForm, TextInput, Textarea, URLInput, FileInput, Select, DateTimeInput
 
 from main.models import Experience, Skill
 
@@ -47,8 +47,6 @@ class ExperienceForm(ModelForm):
             ),
         }
 
-    password = CharField(label="Password",widget=TextInput)
-
 class SkillForm(ModelForm):
     class Meta:
         model = Skill
@@ -90,5 +88,3 @@ class SkillForm(ModelForm):
                 }
             ),
         }
-
-    password = CharField(label="Password",widget=TextInput)
