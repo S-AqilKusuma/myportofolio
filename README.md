@@ -50,6 +50,16 @@ Seperti tugas 1, saya tidak menggunakan AI dalam pengerjaan tugas ini. Kali ini 
 Seperti tugas-tugas sebelumnya, saya tidak menggunakan AI dalam pengerjaan tugas ini. Untuk mayoritas dari tugas ini, saya mengikuti tutorial 3. Selain itu, saya juga membaca Django Documentation, MDN Web Docs, W3Schools, dan GeeksForGeeks. Saya juga mencari-cari informasi dari forum Django dan StackOverflow.
 
 
+### Tugas 4
+
+Pada tugas ini, saya menambahkan group editor melalui Django admin. User yang ada di group ini diberikan otorisasi untuk mengedit skill yang sudah ada. Pada views.py, saya mengganti decorator @login_required pada view edit_skill menjadi @permission_required. Decorator ini menerima argumen berupa codename dari permission dengan format '\<codename_app>.\<codename_permission>'. Untuk tugas ini, saya hanya menggunakan decorator ini sekali pada view edit_skill dengan permission 'main.change_skill'. Selain view, saya juga menambahkan conditional tambahan untuk mengecek apakah user seorang editor menggunakan method bawaan User.has_perm(). Conditional ini digunakan untuk menyembunyikan tombol edit dari user biasa namun dapat dilihat oleh editor.
+
+
+### AI USAGE
+
+Sama seperti tugas sebelumnya, saya tidak menggunakan AI dalam pengerjaan tugas ini. Saya mengikuti instruksi tutorial 4 untuk mengerjakan tugas 4. Saya menerapkan instruksi tersebut di bagian skill. Selain itu, saya juga mencari referensi dari dua sumber lain, yaitu Django Documentation dan GeeksForGeeks.
+
+
 ### Referensi
 
 HTML:
@@ -84,15 +94,30 @@ CSS:
 
 Django:
 - Model field reference: https://docs.djangoproject.com/en/6.1/ref/models/fields/
-- ImageField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.ImageField
-- URLField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.URLField
-- CSRF_TRUSTED_ORIGINS setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
-- CSRF_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_COOKIE_SECURE
-- SESSION_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#session-cookie-secure
 - File Uploads: https://docs.djangoproject.com/en/6.1/topics/http/file-uploads/
 - Creating forms from models: https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/
 - Cross Site Request Forgery protection: https://docs.djangoproject.com/en/6.1/ref/csrf/
+- Permissions and Authorization: https://docs.djangoproject.com/en/5.2/topics/auth/default/#topic-authorization
+
+
+Django Forum:
 - forms.ImageField is not working: https://forum.djangoproject.com/t/forms-imagefield-is-not-working/41905/8
+
+
+Django Models:
+- ImageField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.ImageField
+- URLField: https://docs.djangoproject.com/en/6.1/ref/models/fields/#django.db.models.URLField
+- User model has_perm method: https://docs.djangoproject.com/en/5.2/ref/contrib/auth/#django.contrib.auth.models.User.has_perm
+
+
+Django Settings:
+- CSRF_TRUSTED_ORIGINS setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
+- CSRF_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#std-setting-CSRF_COOKIE_SECURE
+- SESSION_COOKIE_SECURE setting: https://docs.djangoproject.com/en/6.1/ref/settings/#session-cookie-secure
+
+
+Django Decorators:
+- @permission_required decorator: https://docs.djangoproject.com/en/5.2/topics/auth/default/#django.contrib.auth.decorators.permission_required
 
 
 W3Schools:
@@ -104,6 +129,7 @@ W3Schools:
 GeeksForGeeks:
 - Uploading images in Django - Python: https://www.geeksforgeeks.org/python/python-uploading-images-in-django/
 - Update View - Function based Views Django: https://www.geeksforgeeks.org/python/update-view-function-based-views-django/
+- Django: Redirect to Previous Page After Login: https://www.geeksforgeeks.org/python/django-redirect-to-previous-page-after-login/
 
 
 StackOverflow:
