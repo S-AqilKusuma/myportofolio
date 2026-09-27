@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
@@ -158,6 +158,7 @@ def show_skill(request):
         "name": "Sayyid Aqil Kusuma",
         "skill_list": skills,
         "title_query": title_query,
+        "is_editor": request.user.has_perm('main.change_skill'),
     }
     return render(request, "skill.html", context)
 
@@ -189,11 +190,8 @@ def get_skill_json(request):
     skill_json = serializers.serialize("json", skill, use_natural_foreign_keys=True)
     return HttpResponse(skill_json, content_type="application/json")
 
-@login_required(login_url="/login/")
+@permission_required('main.change_skill')
 def edit_skill(request, skill_id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-
     skill = get_object_or_404(Skill, pk=skill_id)
     form = SkillForm(request.POST or None, request.FILES or None, instance=skill)
 

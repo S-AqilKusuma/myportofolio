@@ -34,8 +34,7 @@
                     {{ skill.description }}
                     {% include "components/skill_star.html" with skill=skill %}
                 </p>
-                
-                {% if user.is_superuser %}
+                {% if is_editor %}
                     {% include "components/skill_delete_modal.html" with skill=skill %}
                 {% endif %}
             </body>
