@@ -116,10 +116,14 @@
                 ? `Dibintangi oleh ${experience.starred_by_names}` 
                 : "Jadilah yang pertama memberi star";
 
+            const statusText = experience.ended_at === null ? "Sedang Berlangsung" : "Selesai";
+
             // Komponen card
             const completeCardHtml = `
+                <span class="experience-category">${experience.category}</span>
                 <h2>${experience.title}</h2>
                 <p class="experience-description">${experience.description}</p>
+                <p class="experience-status">${statusText}</p>
                 <div class="experience-card-actions">
                     <div class="actions">
                         
