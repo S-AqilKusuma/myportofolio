@@ -22,40 +22,129 @@
                     {% endif %}
                 </header>
 
-                <form method="get"
-                    action="{% url 'main:show_skill' %}"
+                <form id="skill-search-form"
+                    method="get"
                     class="search skill-search">
                     <input type="search"
+                        id="skill-search-input"
                         name="title"
                         value="{{ title_query }}"
                         placeholder="Cari berdasarkan nama skill"
-                        class="search__input skill-search__input"
+                        class="search__input"
                         aria-label="Cari berdasarkan nama skill">
                     <button type="submit" class="button">Cari</button>
                 </form>
 
-                <div class="skill-grid">
-                    {% for skill in skill_list %}
-                        <!-- Button yang dapat di klik untuk menampikan deskripsi skill. -->
-                        <button type="button"
-                            class="skill-info-button"
-                            popovertarget="info-skill-{{ skill.id }}"
-                            aria-label="Lihat {{ skill.title }}"
-                            title="Lihat skill">
-                            <!-- Nama skill beserta logonya jika ada-->
-                            {% if skill.image %}
-                                <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
-                            {% endif %}
-                            <h2>{{ skill.title }}</h2>
-                        </button>
-                        {% include "components/skill_info_modal.html" with skill=skill %}
-                    {% empty %}
-                        <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
-                        </p>
-                    {% endfor %}
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Memuat pengalaman...</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Gagal memuat data skill. Silakan coba lagi.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>Belum ada skill yang ditambahkan atau ditemukan.</p>
+                </div>
+
+                <!-- Skill Grid -->
+                <div id="grid" class="skill-grid hide"></div>
             </div>
         </section>
     </main>
+
+    <script>
+        // Konfigurasi
+        const BASE_SKILLS_ENDPOINT = "{% url 'main:get_skill_json' %}";
+        const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        const MEDIA_URL = "{{ MEDIA_URL|escapejs }}";
+        let skillsAbortController;
+
+        // Elemen DOM
+        const loadingState = document.getElementById('loading');
+        const errorState = document.getElementById('error');
+        const emptyState = document.getElementById('empty');
+        const gridContainer = document.getElementById('grid');
+        const searchForm = document.getElementById('skill-search-form');
+        const searchInput = document.getElementById('skill-search-input');
+
+        // Menyembunyikan/Menampilkan section halaman
+        function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+            loadingState.classList.toggle('hide', !showLoading);
+            errorState.classList.toggle('hide', !showError);
+            emptyState.classList.toggle('hide', !showEmpty);
+            gridContainer.classList.toggle('hide', !showGrid);
+        }
+
+        // Membuat elemen button skill
+        function buildSkillButtonElement(item) {
+            const skill = item.fields;
+            const skillId = item.pk;
+
+            const buttonElement = document.createElement('button');
+            buttonElement.className = 'skill-info-button';
+            buttonElement.popoverTargetElement = document.getElementById(`info-skill-${skillId}`);
+            buttonElement.ariaLabel = 'Lihat {{ skill.title }}';
+            buttonElement.title = 'Lihat skill';
+
+            const skillImage = skill.image != MEDIA_URL
+                ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
+                : '';
+
+            // Komponen card
+            const completeButtonHtml = `
+                ${skillImage}
+                <h2>${skill.title}</h2>
+            `;
+
+            buttonElement.innerHTML = completeButtonHtml;
+            return buttonElement;
+        }
+
+        // Fetch data skill
+        async function fetchSkills(searchQuery = "") {
+            if (skillsAbortController) skillsAbortController.abort();
+            skillsAbortController = new AbortController();
+
+            try {
+                displayPageSection({ showLoading: true });
+                
+                const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
+                
+                const response = await fetch(url, {
+                    headers: { 'Accept': 'application/json' },
+                    signal: skillsAbortController.signal,
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch data');
+
+                const skillData = await response.json();
+
+                if (skillData.length === 0) {
+                    displayPageSection({ showEmpty: true });
+                } else {
+                    gridContainer.innerHTML = '';
+                    skillData.forEach(item => {
+                        gridContainer.appendChild(buildSkillButtonElement(item));
+                    });
+                    displayPageSection({ showGrid: true });
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error('Error loading skills:', error);
+                displayPageSection({ showError: true });
+            }
+        }
+
+        searchForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            fetchSkills(searchInput.value.trim());
+        });
+
+        // Start application
+        fetchSkills(searchInput.value.trim());
+    </script>
 {% endblock content %}

@@ -1,5 +1,6 @@
 import datetime
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required
@@ -178,20 +179,13 @@ def toggle_star_experience(request, experience_id):
 
 # Skill
 def show_skill(request):
-    json_response = get_skill_json(request)
-    
-    skills = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    skills = [skill.object for skill in skills]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Sayyid Aqil Kusuma",
-        "skill_list": skills,
         "title_query": title_query,
         "is_editor": request.user.has_perm('main.change_skill'),
+        "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "skill.html", context)
 
@@ -215,13 +209,31 @@ def create_skill(request):
 
 def get_skill_json(request):
     title_query = request.GET.get("title", "").strip()
-    skill = Skill.objects.all()
+    skills = Skill.objects.prefetch_related("starred_by").all()
 
     if title_query:
-        skill = skill.filter(title__icontains=title_query)
+        skills = skills.filter(title__icontains=title_query)
 
-    skill_json = serializers.serialize("json", skill, use_natural_foreign_keys=True)
-    return HttpResponse(skill_json, content_type="application/json")
+    data = []
+    for skill in skills:
+        starred_users = skill.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(skill.id),
+            "fields": {
+                "title": skill.title,
+                "description": skill.description,
+                "image": settings.MEDIA_URL+str(skill.image),
+                "image_source": skill.image_source,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 @permission_required('main.change_skill')
 def edit_skill(request, skill_id):
