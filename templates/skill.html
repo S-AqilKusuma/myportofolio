@@ -72,6 +72,10 @@
         const searchForm = document.getElementById('skill-search-form');
         const searchInput = document.getElementById('skill-search-input');
 
+        // Search Debounce
+        const SEARCH_DEBOUNCE_DELAY = 300;
+        let searchDebounceTimer;
+
         // Menyembunyikan/Menampilkan section halaman
         function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
             loadingState.classList.toggle('hide', !showLoading);
@@ -159,7 +163,7 @@
             return dialogElement;
         }
 
-        // Membuat elemen action skill
+        // Membuat elemen modal action skill
         function buildSkillInfoActionsElement(item) {
             const skill = item.fields;
             const skillId = item.pk;
@@ -250,9 +254,23 @@
             }
         }
 
+        // Event Handlers untuk Form Search
+        function searchSkills() {
+            fetchSkills(searchInput.value.trim());
+        }
+
+        searchInput.addEventListener("input", function() {
+            clearTimeout(searchDebounceTimer);
+
+            searchDebounceTimer = setTimeout(function() {
+                searchSkills();
+            }, SEARCH_DEBOUNCE_DELAY);
+        });
+
         searchForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            fetchSkills(searchInput.value.trim());
+            clearTimeout(searchDebounceTimer);
+            searchSkills();
         });
 
         // Start application
