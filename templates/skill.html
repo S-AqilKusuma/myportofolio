@@ -60,6 +60,7 @@
         // Konfigurasi
         const BASE_SKILLS_ENDPOINT = "{% url 'main:get_skill_json' %}";
         const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
         const MEDIA_URL = "{{ MEDIA_URL|escapejs }}";
         let skillsAbortController;
 
@@ -123,7 +124,7 @@
                 ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
                 : '';
             
-            const skillImageSource =  skill.image_source
+            const skillImageSource = skill.image_source
                 ? `<a href="${skill.image_source}">${skillImage}</a>`
                 : '';
 
@@ -147,9 +148,8 @@
                             <h2 id="info-skill-title-${skillId}">${skill.title}</h2>
                         </header>
                         <body class="skill-info-modal__body modal__body">
-                            <p style="word-break: break-word">
-                                ${skill.description}
-                            </p>
+                            <p style="word-break: break-word">${skill.description}</p>
+                            ${buildSkillInfoActionsElement(item).outerHTML}
                         </body>
                     </section>
                 </div>
@@ -157,6 +157,60 @@
 
             dialogElement.innerHTML = completeDialogHtml;
             return dialogElement;
+        }
+
+        // Membuat elemen action skill
+        function buildSkillInfoActionsElement(item) {
+            const skill = item.fields;
+            const skillId = item.pk;
+
+            const divElement = document.createElement('div');
+            divElement.className = 'modal__actions';
+
+            // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
+            const starUrl = "{% url 'main:toggle_star_skill' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', skillId);
+            const editUrl = "{% url 'main:edit_skill' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', skillId);
+            const deleteUrl = "{% url 'main:delete_skill' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', skillId);
+            
+
+            const isStarredClass = skill.is_starred ? " is-starred" : "";
+            const starText = skill.is_starred ? "Unstar" : "Star";
+            const starTitle = skill.star_count > 0 
+                ? `Dibintangi oleh ${skill.starred_by_names}` 
+                : "Jadilah yang pertama memberi star";
+
+            const editHtml = IS_EDITOR
+                ? `<a href="${editUrl}" class="button add-button skill-add-button">Edit Skill</a>`
+                : '';
+
+            const deleteHtml = IS_SUPERUSER 
+                ? `<form method="post" action="${deleteUrl}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus pengalaman ini?');">Hapus</button>
+                </form>`
+                : '';
+
+            // Komponen card
+            const completeDivHtml = `
+                <form method="post" action="${starUrl}" class="star-form">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="button button-star${isStarredClass}"
+                            title="${starTitle}">
+                        <span aria-hidden="true">★</span>
+                        ${starText}
+                        <span class="star-count">${skill.star_count}</span>
+                    </button>
+                </form>
+                ${deleteHtml}
+                ${editHtml}
+            `;
+
+            divElement.innerHTML = completeDivHtml;
+            return divElement;
         }
 
         // Fetch data skill

@@ -377,9 +377,9 @@ h1, summary, .brand {
 
 .modal__actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 0.75rem;
-    margin-top: 1.5rem;
+    padding: 0 1rem 1rem 1rem;
 }
 
 .modal__body {
