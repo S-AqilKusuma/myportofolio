@@ -393,9 +393,9 @@ h1, summary, .brand {
     word-wrap: break-word;
 }
 
-.skill-info-button h2,
-.modal__header h2 {
-    max-width: 80%;
+.skill-info-button,
+.modal__header {
+    padding: 1rem;
 }
 
 .skill-info-button,
@@ -577,7 +577,6 @@ h1, summary, .brand {
 
     .modal__content {
         width: 100%;
-        padding: 1.25rem;
         border-radius: var(--radius) var(--radius) 0 0;
     }
 

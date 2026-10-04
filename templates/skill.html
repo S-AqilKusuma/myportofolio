@@ -85,14 +85,16 @@
             const skillId = item.pk;
 
             const buttonElement = document.createElement('button');
+            buttonElement.id = `info-skill-button-${skillId}`;
             buttonElement.className = 'skill-info-button';
-            buttonElement.popoverTargetElement = document.getElementById(`info-skill-${skillId}`);
             buttonElement.ariaLabel = 'Lihat {{ skill.title }}';
             buttonElement.title = 'Lihat skill';
 
             const skillImage = skill.image != MEDIA_URL
                 ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
                 : '';
+
+            const skillInfoModal = buildSkillInfoModalElement(item);
 
             // Komponen card
             const completeButtonHtml = `
@@ -101,7 +103,60 @@
             `;
 
             buttonElement.innerHTML = completeButtonHtml;
-            return buttonElement;
+            buttonElement.popoverTargetElement = skillInfoModal;
+            return [buttonElement, skillInfoModal];
+        }
+
+        // Membuat elemen modal skill
+        function buildSkillInfoModalElement(item) {
+            const skill = item.fields;
+            const skillId = item.pk;
+
+            const dialogElement = document.createElement('dialog');
+            dialogElement.id = `info-skill-${skillId}`;
+            dialogElement.className = 'skill-info-modal modal';
+            dialogElement.popover = 'auto';
+            dialogElement.ariaModal = 'true';
+            dialogElement.ariaLabel = skill.title;
+
+            const skillImage = skill.image != MEDIA_URL
+                ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
+                : '';
+            
+            const skillImageSource =  skill.image_source
+                ? `<a href="${skill.image_source}">${skillImage}</a>`
+                : '';
+
+            // Komponen card
+            const completeDialogHtml = `
+                <div class="scrollable">
+                    <button type="button"
+                        class="skill-info-modal__backdrop modal__backdrop"
+                        popovertarget="info-skill-${skillId}"
+                        popovertargetaction="hide"
+                        aria-label="Tutup info"></button>
+                    <section class="skill-info-modal__content modal__content">
+                        <header id="info-skill-header-${skillId}"
+                            class="skill-info-modal__header modal__header">
+                            <button type="button"
+                                class="skill-info-modal__close modal__close"
+                                popovertarget="info-skill-${skillId}"
+                                popovertargetaction="hide"
+                                aria-label="Tutup info">×</button>
+                            ${skillImageSource ? skillImageSource : skillImage}
+                            <h2 id="info-skill-title-${skillId}">${skill.title}</h2>
+                        </header>
+                        <body class="skill-info-modal__body modal__body">
+                            <p style="word-break: break-word">
+                                ${skill.description}
+                            </p>
+                        </body>
+                    </section>
+                </div>
+            `;
+
+            dialogElement.innerHTML = completeDialogHtml;
+            return dialogElement;
         }
 
         // Fetch data skill
@@ -128,7 +183,9 @@
                 } else {
                     gridContainer.innerHTML = '';
                     skillData.forEach(item => {
-                        gridContainer.appendChild(buildSkillButtonElement(item));
+                        const res = buildSkillButtonElement(item);
+                        gridContainer.appendChild(res[0]);
+                        gridContainer.appendChild(res[1]);
                     });
                     displayPageSection({ showGrid: true });
                 }
