@@ -60,6 +60,20 @@ Pada tugas ini, saya menambahkan group editor melalui Django admin. User yang ad
 Sama seperti tugas sebelumnya, saya tidak menggunakan AI dalam pengerjaan tugas ini. Saya mengikuti instruksi tutorial 4 untuk mengerjakan tugas 4. Saya menerapkan instruksi tersebut di bagian skill. Selain itu, saya juga mencari referensi dari dua sumber lain, yaitu Django Documentation dan GeeksForGeeks.
 
 
+### Tugas 5
+
+1. Mengutip dari tutorial 5, debouncing adalah teknik untuk menunda eksekusi program, dalam konteks ini method, sampai suatu jeda tertentu. Jeda ini akan di-refresh jika terdapat event yang berkaitan dengan eksekusi method tersebut. Jika debouncing tidak diterapkan, maka akan method akan dieksekusi setiap kali ada event. Dalam konteks fitur pencarian, hal ini berarti request akan diteruskan setiap kali user mengetik sebuah karakter yang akan terlalu banyak request yang harus diproses server.
+
+2. Mengutip dari MDN Web Docs, kegunaan await adalah untuk menunda eksekusi baris kode lainnya yang ada di dalam suatu method asinkronus. Dengan menggunakan await, program akan menunda eksekusi method sampai Promise, dalam kasus ini data yang di-fetch, terpenuhi atau gagal dipenuhi (data didapatkan atau error). Jika await tidak digunakan, program akan terus mengeksekusi method sampai selesai tanpa menunggu apakah data dari fetch sudah ada atau belum.
+
+3. Mengutip dari tutorial 5, XSS adalah serangan di mana penyerang menyisipkan template HTML ataupun script JS ke dalam form yang kemudian disimpan di server. Kode yang disisipkan penyerang dapat tereksekusi oleh server ketika merender halaman HTML maupun dieksekusi oleh user secara tidak sengaja. Django sudah secara otomatis melakukan escaping terhadap karakter-karakter khusus sehingga ditampilkan sebagai teks biasa. Namun, dalam menggunakan AJAX, kita harus melakukan itu secara manual karena AJAX tidak melakukan escaping secara otomatis.
+
+
+### AI USAGE
+Seperti biasa, saya tidak menggunakan AI dalam pengerjaan tugas ini. Saya mengikuti template dan instruksi yang sudah ada di tutorial 5. Saya juga mencari referensi dari MDN Web Docs dan StackOverflow.
+
+
+
 ### Referensi
 
 HTML:
@@ -90,6 +104,15 @@ CSS:
 - scrollbar-width CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-width
 - white-space CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
 - CSS values and units: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Values_and_units
+
+
+JavaScript:
+- await: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await
+- Promise: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+
+Web API:
+- HTMLButtonElement: popoverTargetElement property: https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/popoverTargetElement
 
 
 Django:
@@ -134,6 +157,7 @@ GeeksForGeeks:
 
 StackOverflow:
 - HTML modal dialog overflow: https://stackoverflow.com/questions/20872411/html-modal-dialog-overflow
+- open new window with JS - but with MEDIA_URL inside - HOW?: https://stackoverflow.com/questions/13284174/open-new-window-with-js-but-with-media-url-inside-how
 
 
 GitHub:
