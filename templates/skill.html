@@ -90,6 +90,16 @@
             gridContainer.classList.toggle('hide', !showGrid);
         }
 
+        // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
         // Membuat elemen button skill
         function buildSkillButtonElement(item) {
             const skill = item.fields;
@@ -98,11 +108,11 @@
             const buttonElement = document.createElement('button');
             buttonElement.id = `info-skill-button-${skillId}`;
             buttonElement.className = 'skill-info-button';
-            buttonElement.ariaLabel = `Lihat ${skill.title}`;
+            buttonElement.ariaLabel = `Lihat ${escapeHtml(skill.title)}`;
             buttonElement.title = 'Lihat skill';
 
             const skillImage = skill.image != MEDIA_URL
-                ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
+                ? `<img class="skill-logo" src="${skill.image}" alt="${escapeHtml(skill.title)} Logo">`
                 : '';
 
             const skillInfoModal = buildSkillInfoModalElement(item);
@@ -110,7 +120,7 @@
             // Komponen card
             const completeButtonHtml = `
                 ${skillImage}
-                <h2>${skill.title}</h2>
+                <h2>${escapeHtml(skill.title)}</h2>
             `;
 
             buttonElement.innerHTML = completeButtonHtml;
@@ -135,10 +145,10 @@
             dialogElement.className = 'skill-info-modal modal';
             dialogElement.popover = 'auto';
             dialogElement.ariaModal = 'true';
-            dialogElement.ariaLabel = skill.title;
+            dialogElement.ariaLabel = escapeHtml(skill.title);
 
             const skillImage = skill.image != MEDIA_URL
-                ? `<img class="skill-logo" src="${skill.image}" alt="${skill.title} Logo">`
+                ? `<img class="skill-logo" src="${skill.image}" alt="${escapeHtml(skill.title)} Logo">`
                 : '';
             
             const skillImageSource = skill.image_source
@@ -177,10 +187,10 @@
                         <header id="info-skill-header-${skillId}"
                             class="skill-info-modal__header modal__header">
                             ${skillImageSource ? skillImageSource : skillImage}
-                            <h2 id="info-skill-title-${skillId}">${skill.title}</h2>
+                            <h2 id="info-skill-title-${skillId}">${escapeHtml(skill.title)}</h2>
                         </header>
                         <body class="skill-info-modal__body modal__body">
-                            <p style="word-break: break-word">${skill.description}</p>
+                            <p style="word-break: break-word">${escapeHtml(skill.description)}</p>
                             ${buildSkillInfoActionsElement(item).outerHTML}
                         </body>
                     </section>
@@ -213,7 +223,7 @@
             const isStarredClass = skill.is_starred ? " is-starred" : "";
             const starText = skill.is_starred ? "Unstar" : "Star";
             const starTitle = skill.star_count > 0 
-                ? `Dibintangi oleh ${skill.starred_by_names}` 
+                ? `Dibintangi oleh ${escapeHtml(skill.starred_by_names)}` 
                 : "Jadilah yang pertama memberi star";
 
             const editHtml = IS_EDITOR
