@@ -375,13 +375,6 @@
             skillForm.addEventListener('submit', addSkill);
         }
 
-        // Event handler untuk mengunci scroll saat tambah skill
-        document.getElementById('add-skill-button').addEventListener('click',
-            function() {
-                document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
-            }
-        )
-
         // Start application
         fetchSkills(searchInput.value.trim());
     </script>
