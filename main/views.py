@@ -186,14 +186,12 @@ def show_skill(request):
         "title_query": title_query,
         "is_editor": request.user.has_perm('main.change_skill'),
         "MEDIA_URL": settings.MEDIA_URL,
+        "form": SkillForm(),
     }
     return render(request, "skill.html", context)
 
-@login_required(login_url="/login/")
+@permission_required('main.add_skill')
 def create_skill(request):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-
     form = SkillForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -206,6 +204,24 @@ def create_skill(request):
         "form": form,
     }
     return render(request, "skill_form.html", context)
+
+@require_POST
+def create_skill_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan skill."},
+            status=403,
+        )
+
+    form = SkillForm(request.POST, request.FILES)
+    if form.is_valid():
+        skill = form.save()
+        return JsonResponse(
+            {"message": "Skill berhasil ditambahkan.", "pk": str(skill.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 def get_skill_json(request):
     title_query = request.GET.get("title", "").strip()

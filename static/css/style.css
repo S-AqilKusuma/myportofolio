@@ -391,7 +391,7 @@ h1, summary, .brand {
 .modal__body,
 .skill-info-button h2,
 .modal__header h2 {
-    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .skill-info-button,

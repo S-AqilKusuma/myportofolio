@@ -14,11 +14,13 @@
                         <p class="form-message">{{ message }}</p>
                     {% endfor %}
                     {% if user.is_superuser %}
-                        <a href="{% url 'main:create_skill' %}"
-                            class="button add-button skill-add-button">
+                        <button type="button"
+                                id="add-skill-button"
+                                class="button skill-add-button add-button"
+                                popovertarget="add-skill-modal">
                             <span aria-hidden="true">+</span>
                             Tambah Skill
-                        </a>
+                        </button>
                     {% endif %}
                 </header>
 
@@ -55,6 +57,10 @@
             </div>
         </section>
     </main>
+
+    {% if user.is_superuser %}
+        {% include "components/skill_add_form_modal.html" %}
+    {% endif %}
 
     <script>
         // Konfigurasi
@@ -296,6 +302,75 @@
             clearTimeout(searchDebounceTimer);
             searchSkills();
         });
+
+        function closeSkillAddModal() {
+            document.getElementById("add-skill-modal").hidePopover();
+        }
+
+        const CREATE_SKILL_ENDPOINT = "{% url 'main:create_skill_ajax' %}";
+        const skillForm = document.getElementById('skill-form');
+
+        // Membaca nilai cookie, digunakan untuk mengambil token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Mengirim data form ke server
+        async function addSkill(event) {
+            event.preventDefault();
+
+            const submitButton = skillForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(CREATE_SKILL_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    body: new FormData(skillForm),
+                });
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok) {
+                    skillForm.reset();
+                    closeSkillAddModal();
+                    showToast('Berhasil', 'Skill baru berhasil ditambahkan!', 'success');
+                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
+                    fetchSkills(searchInput.value.trim());
+                } else {
+                    const errorMessages = result.errors
+                        ? Object.values(result.errors).flat().map(error => error.message)
+                        : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                    showToast('Gagal menambahkan skill', errorMessages.join(' '), 'error');
+                }
+            } catch (error) {
+                console.error('Error adding skill:', error);
+                showToast('Gagal menambahkan skill', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+
+        if (skillForm) {
+            skillForm.addEventListener('submit', addSkill);
+        }
+
+        // Event handler untuk mengunci scroll saat tambah skill
+        document.getElementById('add-skill-button').addEventListener('click',
+            function() {
+                document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
+            }
+        )
 
         // Start application
         fetchSkills(searchInput.value.trim());
