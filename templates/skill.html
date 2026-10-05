@@ -92,7 +92,7 @@
             const buttonElement = document.createElement('button');
             buttonElement.id = `info-skill-button-${skillId}`;
             buttonElement.className = 'skill-info-button';
-            buttonElement.ariaLabel = 'Lihat {{ skill.title }}';
+            buttonElement.ariaLabel = `Lihat ${skill.title}`;
             buttonElement.title = 'Lihat skill';
 
             const skillImage = skill.image != MEDIA_URL
@@ -108,7 +108,14 @@
             `;
 
             buttonElement.innerHTML = completeButtonHtml;
-            buttonElement.popoverTargetElement = skillInfoModal;
+
+            // Mengunci scrollbar dan membuka modal
+            buttonElement.addEventListener("click",
+                function() {
+                    document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
+                    skillInfoModal.showPopover();
+                }
+            )
             return [buttonElement, skillInfoModal];
         }
 
@@ -131,23 +138,38 @@
             const skillImageSource = skill.image_source
                 ? `<a href="${skill.image_source}">${skillImage}</a>`
                 : '';
+            
+            const skillModalBackdrop = document.createElement('button');
+            skillModalBackdrop.className = 'skill-info-modal__backdrop modal__backdrop'
+            skillModalBackdrop.ariaLabel = 'Tutup info';
+
+            // Membuka scrollbar dan menutup modal
+            skillModalBackdrop.addEventListener("click",
+                function() {
+                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
+                    dialogElement.hidePopover();
+                }
+            )
+
+            const skillModalClose = document.createElement('button');
+            skillModalClose.className = 'skill-info-modal__close modal__close';
+            skillModalClose.ariaLabel = 'Tutup info';
+            skillModalClose.innerHTML = '×';
+
+            // Membuka scrollbar dan menutup modal
+            skillModalClose.addEventListener("click",
+                function() {
+                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
+                    dialogElement.hidePopover();
+                }
+            )
 
             // Komponen card
             const completeDialogHtml = `
                 <div class="scrollable">
-                    <button type="button"
-                        class="skill-info-modal__backdrop modal__backdrop"
-                        popovertarget="info-skill-${skillId}"
-                        popovertargetaction="hide"
-                        aria-label="Tutup info"></button>
                     <section class="skill-info-modal__content modal__content">
                         <header id="info-skill-header-${skillId}"
                             class="skill-info-modal__header modal__header">
-                            <button type="button"
-                                class="skill-info-modal__close modal__close"
-                                popovertarget="info-skill-${skillId}"
-                                popovertargetaction="hide"
-                                aria-label="Tutup info">×</button>
                             ${skillImageSource ? skillImageSource : skillImage}
                             <h2 id="info-skill-title-${skillId}">${skill.title}</h2>
                         </header>
@@ -160,6 +182,8 @@
             `;
 
             dialogElement.innerHTML = completeDialogHtml;
+            dialogElement.children.item(0).appendChild(skillModalBackdrop)
+            dialogElement.getElementsByTagName('header').item(0).appendChild(skillModalClose)
             return dialogElement;
         }
 
