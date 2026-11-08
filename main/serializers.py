@@ -56,7 +56,7 @@ class SkillSerializer(serializers.ModelSerializer):
         model = Skill
         fields = [
             "id", "title", "description",
-            "image", "image_source"
+            "image", "image_source",
             "star_count", "is_starred", "starred_by_names",
         ]
         read_only_fields = ["id", "star_count", "is_starred", "starred_by_names",]
