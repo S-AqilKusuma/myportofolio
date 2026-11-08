@@ -223,7 +223,7 @@ class SkillAPITest(APITestCase):
         self.assertFalse(response.data["is_starred"])
         self.assertEqual(response.data["starred_by_names"], "")
 
-    def test_editor_can_manage_skills(self):
+    def test_editor_can_edit_skills(self):
         self.visitor.is_staff = True
         self.visitor.save()
         self.visitor.groups.add(Group.objects.create(name="Editor"))
@@ -232,6 +232,24 @@ class SkillAPITest(APITestCase):
         self.skill.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Changed")
+
+    def test_editor_cannot_add_skills(self):
+        self.visitor.is_staff = True
+        self.visitor.save()
+        self.visitor.groups.add(Group.objects.create(name="Editor"))
+        self.client.force_authenticate(user=self.visitor)
+        response = self.client.post(self.detail_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Skill.objects.count(), 1)
+
+    def test_editor_cannot_delete_skills(self):
+        self.visitor.is_staff = True
+        self.visitor.save()
+        self.visitor.groups.add(Group.objects.create(name="Editor"))
+        self.client.force_authenticate(user=self.visitor)
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Skill.objects.count(), 1)
 
     def test_wrong_method(self):
         self.client.force_authenticate(user=self.owner)
