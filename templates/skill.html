@@ -25,8 +25,7 @@
                 </header>
 
                 <form id="skill-search-form"
-                    method="get"
-                    class="search skill-search">
+                      class="search">
                     <input type="search"
                         id="skill-search-input"
                         name="title"
@@ -61,61 +60,56 @@
     {% if user.is_superuser %}
         {% include "components/skill_add_form_modal.html" %}
     {% endif %}
+    {% include "components/skill_info_modal.html" %}
 
     <script>
-        // Konfigurasi
-        const BASE_SKILLS_ENDPOINT = "{% url 'main:get_skill_json' %}";
-        const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
-        const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
-        const MEDIA_URL = "{{ MEDIA_URL|escapejs }}";
-        let skillsAbortController;
+        const BASE_SKILL_ENDPOINT = "{% url 'api:skill-list' %}";
+        const DETAIL_SKILL_ENDPOINT = "{% url 'api:skill-detail' '00000000-0000-0000-0000-000000000000' %}";
 
-        // Elemen DOM
         const loadingState = document.getElementById('loading');
         const errorState = document.getElementById('error');
         const emptyState = document.getElementById('empty');
         const gridContainer = document.getElementById('grid');
         const searchForm = document.getElementById('skill-search-form');
         const searchInput = document.getElementById('skill-search-input');
-
-        // Search Debounce
-        const SEARCH_DEBOUNCE_DELAY = 300;
+        const skillForm = document.getElementById('skill-form');
+        let skillsAbortController;
         let searchDebounceTimer;
 
-        // Menyembunyikan/Menampilkan section halaman
-        function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        function getCookie(name) {
+            const prefix = `${name}=`;
+            const cookie = document.cookie.split(';').map(value => value.trim())
+                .find(value => value.startsWith(prefix));
+            return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+        }
+
+        function displayPageSection({ showLoading = false, showError = false,
+            showEmpty = false, showGrid = false }) {
             loadingState.classList.toggle('hide', !showLoading);
             errorState.classList.toggle('hide', !showError);
             emptyState.classList.toggle('hide', !showEmpty);
             gridContainer.classList.toggle('hide', !showGrid);
         }
 
-        // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
         function escapeHtml(value) {
-            return String(value ?? '')
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#39;');
+            return String(value ?? '').replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
         }
 
-        // Membuat elemen button skill
-        function buildSkillButtonElement(item) {
-            const skill = item.fields;
-            const skillId = item.pk;
+        function skillEndpoint(pattern, id) {
+            return pattern.replace('00000000-0000-0000-0000-000000000000', id);
+        }
 
+        function buildSkillButtonElement(skill) {
             const buttonElement = document.createElement('button');
-            buttonElement.id = `info-skill-button-${skillId}`;
             buttonElement.className = 'skill-info-button';
             buttonElement.ariaLabel = `Lihat ${escapeHtml(skill.title)}`;
             buttonElement.title = 'Lihat skill';
 
-            const skillImage = skill.image != MEDIA_URL
+            const skillImage = skill.image != null
                 ? `<img class="skill-logo" src="${skill.image}" alt="${escapeHtml(skill.title)} Logo">`
                 : '';
-
-            const skillInfoModal = buildSkillInfoModalElement(item);
 
             // Komponen card
             const completeButtonHtml = `
@@ -128,254 +122,91 @@
             // Mengunci scrollbar dan membuka modal
             buttonElement.addEventListener("click",
                 function() {
-                    document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
-                    skillInfoModal.showPopover();
+                    updateDialog(skill);
+                    showInfoModal();
                 }
             )
-            return [buttonElement, skillInfoModal];
+            return buttonElement;
         }
 
-        // Membuat elemen modal skill
-        function buildSkillInfoModalElement(item) {
-            const skill = item.fields;
-            const skillId = item.pk;
-
-            const dialogElement = document.createElement('dialog');
-            dialogElement.id = `info-skill-${skillId}`;
-            dialogElement.className = 'skill-info-modal modal';
-            dialogElement.popover = 'auto';
-            dialogElement.ariaModal = 'true';
-            dialogElement.ariaLabel = escapeHtml(skill.title);
-
-            const skillImage = skill.image != MEDIA_URL
-                ? `<img class="skill-logo" src="${skill.image}" alt="${escapeHtml(skill.title)} Logo">`
-                : '';
-            
-            const skillImageSource = skill.image_source
-                ? `<a href="${skill.image_source}">${skillImage}</a>`
-                : '';
-            
-            const skillModalBackdrop = document.createElement('button');
-            skillModalBackdrop.className = 'skill-info-modal__backdrop modal__backdrop'
-            skillModalBackdrop.ariaLabel = 'Tutup info';
-
-            // Membuka scrollbar dan menutup modal
-            skillModalBackdrop.addEventListener("click",
-                function() {
-                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
-                    dialogElement.hidePopover();
-                }
-            )
-
-            const skillModalClose = document.createElement('button');
-            skillModalClose.className = 'skill-info-modal__close modal__close';
-            skillModalClose.ariaLabel = 'Tutup info';
-            skillModalClose.innerHTML = '×';
-
-            // Membuka scrollbar dan menutup modal
-            skillModalClose.addEventListener("click",
-                function() {
-                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
-                    dialogElement.hidePopover();
-                }
-            )
-
-            // Komponen card
-            const completeDialogHtml = `
-                <div class="scrollable">
-                    <section class="skill-info-modal__content modal__content">
-                        <header id="info-skill-header-${skillId}"
-                            class="skill-info-modal__header modal__header">
-                            ${skillImageSource ? skillImageSource : skillImage}
-                            <h2 id="info-skill-title-${skillId}">${escapeHtml(skill.title)}</h2>
-                        </header>
-                        <body class="skill-info-modal__body modal__body">
-                            <p style="word-break: break-word">${escapeHtml(skill.description)}</p>
-                            ${buildSkillInfoActionsElement(item).outerHTML}
-                        </body>
-                    </section>
-                </div>
-            `;
-
-            dialogElement.innerHTML = completeDialogHtml;
-            dialogElement.children.item(0).appendChild(skillModalBackdrop)
-            dialogElement.getElementsByTagName('header').item(0).appendChild(skillModalClose)
-            return dialogElement;
-        }
-
-        // Membuat elemen modal action skill
-        function buildSkillInfoActionsElement(item) {
-            const skill = item.fields;
-            const skillId = item.pk;
-
-            const divElement = document.createElement('div');
-            divElement.className = 'modal__actions';
-
-            // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
-            const starUrl = "{% url 'main:toggle_star_skill' '00000000-0000-0000-0000-000000000000' %}"
-                .replace('00000000-0000-0000-0000-000000000000', skillId);
-            const editUrl = "{% url 'main:edit_skill' '00000000-0000-0000-0000-000000000000' %}"
-                .replace('00000000-0000-0000-0000-000000000000', skillId);
-            const deleteUrl = "{% url 'main:delete_skill' '00000000-0000-0000-0000-000000000000' %}"
-                .replace('00000000-0000-0000-0000-000000000000', skillId);
-            
-
-            const isStarredClass = skill.is_starred ? " is-starred" : "";
-            const starText = skill.is_starred ? "Unstar" : "Star";
-            const starTitle = skill.star_count > 0 
-                ? `Dibintangi oleh ${escapeHtml(skill.starred_by_names)}` 
-                : "Jadilah yang pertama memberi star";
-
-            const editHtml = IS_EDITOR
-                ? `<a href="${editUrl}" class="button add-button skill-add-button">Edit Skill</a>`
-                : '';
-
-            const deleteHtml = IS_SUPERUSER 
-                ? `<form method="post" action="${deleteUrl}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus pengalaman ini?');">Hapus</button>
-                </form>`
-                : '';
-
-            // Komponen card
-            const completeDivHtml = `
-                <form method="post" action="${starUrl}" class="star-form">
-                    {% csrf_token %}
-                    <button type="submit" 
-                            class="button button-star${isStarredClass}"
-                            title="${starTitle}">
-                        <span aria-hidden="true">★</span>
-                        ${starText}
-                        <span class="star-count">${skill.star_count}</span>
-                    </button>
-                </form>
-                ${deleteHtml}
-                ${editHtml}
-            `;
-
-            divElement.innerHTML = completeDivHtml;
-            return divElement;
-        }
-
-        // Fetch data skill
         async function fetchSkills(searchQuery = "") {
             if (skillsAbortController) skillsAbortController.abort();
             skillsAbortController = new AbortController();
-
             try {
                 displayPageSection({ showLoading: true });
-                
-                const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
-                
+                const url = new URL(BASE_SKILL_ENDPOINT, window.location.origin);
+                if (searchQuery) url.searchParams.set('title', searchQuery);
                 const response = await fetch(url, {
-                    headers: { 'Accept': 'application/json' },
+                    headers: { Accept: 'application/json' },
                     signal: skillsAbortController.signal,
                 });
-
-                if (!response.ok) throw new Error('Failed to fetch data');
-
-                const skillData = await response.json();
-
-                if (skillData.length === 0) {
-                    displayPageSection({ showEmpty: true });
-                } else {
-                    gridContainer.innerHTML = '';
-                    skillData.forEach(item => {
-                        const res = buildSkillButtonElement(item);
-                        gridContainer.appendChild(res[0]);
-                        gridContainer.appendChild(res[1]);
-                    });
-                    displayPageSection({ showGrid: true });
-                }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const skills = await response.json();
+                gridContainer.replaceChildren(...skills.map(buildSkillButtonElement));
+                displayPageSection({ showGrid: skills.length > 0, showEmpty: skills.length === 0 });
             } catch (error) {
                 if (error.name === 'AbortError') return;
-                console.error('Error loading skills:', error);
+                console.error(error);
                 displayPageSection({ showError: true });
             }
         }
 
-        // Event Handlers untuk Form Search
-        function searchSkills() {
-            fetchSkills(searchInput.value.trim());
+        function apiErrorMessage(data, status) {
+            const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+            return messages.join(' ') || `Request failed (HTTP ${status}).`;
         }
 
-        searchInput.addEventListener("input", function() {
-            clearTimeout(searchDebounceTimer);
-
-            searchDebounceTimer = setTimeout(function() {
-                searchSkills();
-            }, SEARCH_DEBOUNCE_DELAY);
-        });
-
-        searchForm.addEventListener("submit", function(event) {
-            event.preventDefault();
-            clearTimeout(searchDebounceTimer);
-            searchSkills();
-        });
-
-        function closeSkillAddModal() {
-            document.getElementById("add-skill-modal").hidePopover();
+        async function writeSkill(url, method, payload) {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: payload === undefined ? undefined : JSON.stringify(payload),
+            });
+            if (response.status === 204) return null;
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+            return data;
         }
 
-        const CREATE_SKILL_ENDPOINT = "{% url 'main:create_skill_ajax' %}";
-        const skillForm = document.getElementById('skill-form');
-
-        // Membaca nilai cookie, digunakan untuk mengambil token CSRF
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Mengirim data form ke server
         async function addSkill(event) {
             event.preventDefault();
-
-            const submitButton = skillForm.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-
+            const button = skillForm.querySelector('button[type="submit"]');
+            button.disabled = true;
             try {
-                const response = await fetch(CREATE_SKILL_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                    body: new FormData(skillForm),
-                });
-                const result = await response.json().catch(() => ({}));
-
-                if (response.ok) {
-                    skillForm.reset();
-                    closeSkillAddModal();
-                    showToast('Berhasil', 'Skill baru berhasil ditambahkan!', 'success');
-                    document.getElementsByTagName('html').item(0).style.overflow = 'auto';
-                    fetchSkills(searchInput.value.trim());
-                } else {
-                    const errorMessages = result.errors
-                        ? Object.values(result.errors).flat().map(error => error.message)
-                        : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                    showToast('Gagal menambahkan skill', errorMessages.join(' '), 'error');
-                }
+                const fields = new FormData(skillForm);
+                const payload = Object.fromEntries([
+                    "title", "description", "image", "image_source",
+                ].map(name => {
+                    const value = fields.get(name);
+                    return [name, value ? value : null]
+                }));
+                await writeSkill(BASE_SKILL_ENDPOINT, 'POST', payload);
+                skillForm.reset();
+                document.getElementById('add-skill-modal').hidePopover();
+                showToast('Success', 'Skill created.', 'success');
+                await fetchSkills(searchInput.value.trim());
             } catch (error) {
-                console.error('Error adding skill:', error);
-                showToast('Gagal menambahkan skill', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+                showToast('Could not create skill', error.message, 'error');
             } finally {
-                submitButton.disabled = false;
+                button.disabled = false;
             }
         }
 
-        if (skillForm) {
-            skillForm.addEventListener('submit', addSkill);
-        }
+        if (skillForm) skillForm.addEventListener('submit', addSkill);
 
-        // Start application
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => fetchSkills(searchInput.value.trim()), 300);
+        });
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearTimeout(searchDebounceTimer);
+            fetchSkills(searchInput.value.trim());
+        });
         fetchSkills(searchInput.value.trim());
     </script>
 {% endblock content %}

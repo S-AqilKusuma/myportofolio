@@ -1,43 +1,154 @@
-<dialog id="info-skill-{{ skill.id }}"
-    class="skill-info-modal modal"
-    popover="auto"
-    aria-modal="true"
-    aria-labelledby="info-skill-title-{{ skill.id }}">
+<dialog id="info-skill"
+        class="skill-info-modal modal"
+        popover="auto"
+        aria-modal="true"
+        aria-labelledby="info-skill-title">
     <div class="scrollable">
         <button type="button"
-            class="skill-info-modal__backdrop modal__backdrop"
-            popovertarget="info-skill-{{ skill.id }}"
-            popovertargetaction="hide"
-            aria-label="Tutup info"></button>
+                class="skill-info-modal__backdrop modal__backdrop"
+                onclick="hideInfoModal()"
+                aria-label="Tutup info"></button>
         <section class="skill-info-modal__content modal__content">
-            <header id="info-skill-header-{{ skill.id }}"
-                class="skill-info-modal__header modal__header">
+            <header class="skill-info-modal__header modal__header">
                 <button type="button"
-                    class="skill-info-modal__close modal__close"
-                    popovertarget="info-skill-{{ skill.id }}"
-                    popovertargetaction="hide"
-                    aria-label="Tutup info">×</button>
-                {% if skill.image %}
-                    <!-- Memberikan link asal dari gambar jika ada -->
-                    {% if skill.image_source %}
-                        <a href="{{ skill.image_source }}">
-                            <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
-                        </a>
-                    {% else %}
-                        <img class="skill-logo" src="{{ skill.image.url }}" alt="{{ skill.title }} Logo">
-                    {% endif %}
-                {% endif %}
-                <h2 id="info-skill-title-{{ skill.id }}">{{ skill.title }}</h2>
+                        class="skill-info-modal__close modal__close"
+                        onclick="hideInfoModal()"
+                        aria-label="Tutup info">×</button>
+                <a id="info-skill-logo-source">
+                    <img id="info-skill-logo"
+                         class="skill-logo"></a>
+                <h2 id="info-skill-title"></h2>
             </header>
             <body class="skill-info-modal__body modal__body">
-                <p>
-                    {{ skill.description }}
-                    {% include "components/skill_star.html" with skill=skill %}
-                </p>
-                {% if is_editor %}
-                    {% include "components/skill_delete_modal.html" with skill=skill %}
-                {% endif %}
+                <p id="info-skill-description"
+                   style="word-break: break-word"></p>
+                <div class="modal__actions">
+                    {% if user.is_authenticated %}
+                        <button id="star-button"
+                                type="button"
+                                class="button button-star"
+                                onclick="star()"></button>
+                    {% else %}
+                        <a id="star-login"
+                           href="{% url 'main:login' %}"
+                           class="button"></a>
+                    {% endif %}
+                    {% if is_editor %}
+                        <a id="edit-button"
+                           class="button add-button skill-add-button">
+                            Edit
+                        </a>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                        <button id="delete-button"
+                                type="button"
+                                class="button button-danger"
+                                onclick="deleteSkill()">
+                            Delete
+                        </button>
+                    {% endif %}
+                </div>
             </body>
         </section>
     </div>
 </dialog>
+
+<script>
+    // Endpoints
+    const STAR_SKILL_ENDPOINT = "{% url 'api:skill-star' '00000000-0000-0000-0000-000000000000' %}";
+
+    // Elemen DOM
+    const infoDialog = document.getElementById('info-skill');
+    const logoSource = document.getElementById('info-skill-logo-source');
+    const logo = document.getElementById('info-skill-logo');
+    const title = document.getElementById('info-skill-title');
+    const description = document.getElementById('info-skill-description');
+    const starButton = document.getElementById('star-button');
+    const starLogin = document.getElementById('star-login');
+    const editButton = document.getElementById('edit-button');
+    const deleteButton = document.getElementById('delete-button');
+
+    let currentSkill;
+
+    function updateDialog(skill) {
+        currentSkill = skill;
+
+        if (skill.image_source) {
+            logoSource.style.pointerEvents = 'auto';
+            logoSource.href = skill.image_source;
+        } else {
+            logoSource.style.pointerEvents = 'none';
+            logoSource.href = null;
+        }
+
+        if (skill.image) {
+            logo.src = skill.image;
+            logo.title = `${escapeHtml(skill.title)} Logo`;
+            logo.hidden = false;
+        } else {
+            logo.title = null;
+            logo.hidden = true;
+        }
+
+        title.innerHTML = escapeHtml(skill.title);
+        description.innerHTML = escapeHtml(skill.description);
+
+        if (starButton) {
+            starButton.title = escapeHtml(skill.starred_by_names);
+            starButton.innerHTML = `${skill.is_starred ? 'Unstar' : 'Star'} (${skill.star_count})`;
+            starButton.classList.toggle('is-starred', skill.is_starred);
+        }
+
+        if (starLogin) starLogin.title = `Login to star (${skill.star_count})`;
+
+        if (editButton) editButton.href = skillEndpoint(
+                "{% url 'main:edit_skill' '00000000-0000-0000-0000-000000000000' %}",
+                skill.id
+            );
+    }
+
+    function showInfoModal() {
+        document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
+        infoDialog.showPopover();
+    }
+
+    function hideInfoModal() {
+        document.getElementsByTagName('html').item(0).style.overflow = 'auto';
+        infoDialog.hidePopover();
+    }
+
+    async function star() {
+        starButton.disabled = true;
+        try { 
+            const data = await writeSkill(
+                skillEndpoint(STAR_SKILL_ENDPOINT, currentSkill.id),
+                'POST'
+            );
+            if (data) updateDialog(data);
+            showToast('Success', 'Star updated.', 'success');
+            await fetchSkills(searchInput.value.trim());
+        } catch (error) {
+            showToast('Request failed', error.message, 'error');
+        } finally {
+            starButton.disabled = false;
+        }
+    }
+
+    async function deleteSkill() {
+        if (!window.confirm('Delete this skill?')) return;
+        deleteButton.disabled = true;
+        try { 
+            await writeSkill(
+                skillEndpoint(DETAIL_SKILL_ENDPOINT, currentSkill.id),
+                'DELETE'
+            );
+            showToast('Success', 'Skill deleted.', 'success');
+            await fetchSkills(searchInput.value.trim());
+            hideInfoModal();
+        } catch (error) {
+            showToast('Request failed', error.message, 'error');
+        } finally {
+            deleteButton.disabled = false;
+        }
+    }
+</script>
