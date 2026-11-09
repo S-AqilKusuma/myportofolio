@@ -17,7 +17,8 @@
                         <button type="button"
                                 id="add-skill-button"
                                 class="button skill-add-button add-button"
-                                popovertarget="add-skill-modal">
+                                popovertarget="add-skill-modal"
+                                onclick="updateForm(null)">
                             <span aria-hidden="true">+</span>
                             Tambah Skill
                         </button>
@@ -57,7 +58,7 @@
         </section>
     </main>
 
-    {% if user.is_superuser %}
+    {% if user.is_superuser or is_editor %}
         {% include "components/skill_add_form_modal.html" %}
     {% endif %}
     {% include "components/skill_info_modal.html" %}
@@ -188,7 +189,29 @@
             }
         }
 
-        if (skillForm) skillForm.addEventListener('submit', addSkill);
+        async function editSkill(event) {
+            event.preventDefault();
+            const button = skillForm.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const payload = new FormData(skillForm);
+                const data = await writeSkill(skillEndpoint(DETAIL_SKILL_ENDPOINT, currentSkill.id), 'PATCH', payload);
+                skillForm.reset();
+                document.getElementById('add-skill-modal').hidePopover();
+                showToast('Success', 'Skill created.', 'success');
+                updateDialog(data);
+                await fetchSkills(searchInput.value.trim());
+            } catch (error) {
+                showToast('Could not create skill', error.message, 'error');
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        if (skillForm) skillForm.addEventListener('submit', function(event) {
+            if (currentSkill) editSkill(event);
+            else addSkill(event);
+        });
 
         searchInput.addEventListener('input', function() {
             clearTimeout(searchDebounceTimer);

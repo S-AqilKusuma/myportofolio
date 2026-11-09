@@ -22,7 +22,6 @@
         <h2 id="add-skill-modal-title">Tambah Skill Baru</h2>
         <form id="skill-form"
               method="post"
-              action="{% url 'main:create_skill' %}"
               class="skill-form"
               enctype="multipart/form-data">
             {% csrf_token %}
@@ -49,12 +48,32 @@
 </dialog>
 
 <script>
-    // Event handler untuk mengunci scroll saat tambah skill
-    document.getElementById('add-skill-button').addEventListener('click',
-        function() {
-            document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
+    const form = document.getElementById('skill-form');
+    const formTitle = document.getElementById('add-skill-modal-title');
+    const formSubmitButton = form.querySelector('button[type="submit"]');
+    function updateForm(skill) {
+        if (skill) {
+            for (entry of Object.entries(skill)) {
+                const elem = document.getElementById(`id_${entry[0]}`)
+                if(elem && entry[0] !== "image") elem.value = entry[1];
+            }
+            formTitle.innerHTML = `Edit: ${skill.title}`;
+            formSubmitButton.innerHTML = 'Edit Skill';
+        } else {
+            formTitle.innerHTML = 'Tambah Skill Baru';
+            formSubmitButton.innerHTML = 'Tambah Skill';
         }
-    )
+    }
+
+    // Event handler untuk mengunci scroll saat tambah skill
+    const addButton = document.getElementById('add-skill-button');
+    if (addButton) {
+        addButton.addEventListener('click',
+            function() {
+                document.getElementsByTagName('html').item(0).style.overflow = 'hidden';
+            }
+        )
+    }
 
     // Event handler untuk membuka kunci scroll tambah skill
     document.getElementById('add-skill-backdrop').addEventListener('click',

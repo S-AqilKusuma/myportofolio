@@ -34,10 +34,12 @@
                            class="button"></a>
                     {% endif %}
                     {% if is_editor %}
-                        <a id="edit-button"
-                           class="button add-button skill-add-button">
+                        <button id="edit-button"
+                                class="button add-button skill-add-button"
+                                popovertarget="add-skill-modal"
+                                onclick="updateForm(currentSkill)">
                             Edit
-                        </a>
+                        </button>
                     {% endif %}
                     {% if user.is_superuser %}
                         <button id="delete-button"
@@ -99,7 +101,7 @@
             starButton.classList.toggle('is-starred', skill.is_starred);
         }
 
-        if (starLogin) starLogin.title = `Login to star (${skill.star_count})`;
+        if (starLogin) starLogin.innerHTML = `Login to star (${skill.star_count})`;
 
         if (editButton) editButton.href = skillEndpoint(
                 "{% url 'main:edit_skill' '00000000-0000-0000-0000-000000000000' %}",
@@ -115,6 +117,7 @@
     function hideInfoModal() {
         document.getElementsByTagName('html').item(0).style.overflow = 'auto';
         infoDialog.hidePopover();
+        currentSkill = null;
     }
 
     async function star() {
