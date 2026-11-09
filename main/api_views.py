@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import (
-    api_view, authentication_classes, permission_classes,
+    api_view, authentication_classes, parser_classes, permission_classes,
 )
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -67,6 +68,7 @@ def experience_star(request, experience_id):
     return Response(serializer.data)
 
 @api_view(["GET", "POST"])
+@parser_classes([MultiPartParser, FormParser])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
 def skill_list(request):

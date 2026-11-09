@@ -183,7 +183,7 @@ class SkillAPITest(APITestCase):
 
     def test_owner_can_create(self):
         self.client.force_authenticate(user=self.owner)
-        response = self.client.post(self.list_url, self.payload, format="json")
+        response = self.client.post(self.list_url, self.payload, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Skill.objects.filter(pk=response.data["id"]).exists())
 
@@ -217,7 +217,7 @@ class SkillAPITest(APITestCase):
         response = self.client.post(self.list_url, {
             **self.payload, "star_count": 99, "is_starred": True,
             "starred_by_names": "forged", "starred_by_names": [self.visitor.get_full_name()],
-        }, format="json")
+        }, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["star_count"], 0)
         self.assertFalse(response.data["is_starred"])
@@ -258,7 +258,7 @@ class SkillAPITest(APITestCase):
     def test_session_write_without_csrf_is_rejected(self):
         client = APIClient(enforce_csrf_checks=True)
         self.assertTrue(client.login(username="owner", password="test-password"))
-        response = client.post(self.list_url, self.payload, format="json")
+        response = client.post(self.list_url, self.payload, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Skill.objects.count(), 1)
 
@@ -270,6 +270,6 @@ class SkillAPITest(APITestCase):
         self.assertEqual(page.status_code, status.HTTP_200_OK)
         token = client.cookies["csrftoken"].value
         response = client.post(
-            self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
+            self.list_url, self.payload, format="multipart", HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

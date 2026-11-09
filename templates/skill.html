@@ -160,11 +160,9 @@
             const response = await fetch(url, {
                 method: method,
                 headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken'),
                 },
-                body: payload === undefined ? undefined : JSON.stringify(payload),
+                body: payload === undefined ? undefined : payload,
             });
             if (response.status === 204) return null;
             const data = await response.json().catch(() => ({}));
@@ -177,13 +175,7 @@
             const button = skillForm.querySelector('button[type="submit"]');
             button.disabled = true;
             try {
-                const fields = new FormData(skillForm);
-                const payload = Object.fromEntries([
-                    "title", "description", "image", "image_source",
-                ].map(name => {
-                    const value = fields.get(name);
-                    return [name, value ? value : null]
-                }));
+                const payload = new FormData(skillForm);
                 await writeSkill(BASE_SKILL_ENDPOINT, 'POST', payload);
                 skillForm.reset();
                 document.getElementById('add-skill-modal').hidePopover();
