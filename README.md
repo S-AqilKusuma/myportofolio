@@ -73,6 +73,23 @@ Sama seperti tugas sebelumnya, saya tidak menggunakan AI dalam pengerjaan tugas 
 Seperti biasa, saya tidak menggunakan AI dalam pengerjaan tugas ini. Saya mengikuti template dan instruksi yang sudah ada di tutorial 5. Saya juga mencari referensi dari MDN Web Docs dan StackOverflow.
 
 
+### Tugas 6
+
+1. Mengutip dari tutorial 7, REST merupakan arsitektur web API yang bersifat *stateless* di mana tiap URL menunjuk pada data yang ada di server. Setiap *request* yang dikirim memiliki *method* sehingga satu *view* dapat melakukan lebih dari satu hal seperti menambahkan, mengedit, ataupun menghapus data. Klien dan server bertukar representasi data dalam bentuk JSON. Namun, hanya bertukar JSON belum tentu RESTful karena bisa saja *request* yang sekarang bergantung pada *request* yang sebelumnya yang mana melanggar sifat *stateless* dari REST.
+
+Adapun dua dari beberapa *method* pada *request* yaitu PUT dan PATCH. Mengutip dari MDN Web Docs, PUT digunakan ketika klien ingin mengubah data dari suatu objek secara keseluruhan. Misalkan, jika saya ingin mengubah semua *field* dari sebuah *model instance* tanpa mengubah hubungannya dengan *model instance* lain. Sementara itu, PATCH digunakan ketika perubahan yang ingin dilakukan bersifat parsial. Misalkan dari semua *field* pada *model skill* yang saya buat, saya hanya ingin mengubah *title*-nya.
+
+2. *Serializer* digunakan untuk melakukan serialisasi terhadap *model instance* menjadi data yang dapat dikirim melalui *response*, deserialisasi terhadap data dari request menjadi *model instance*, dan melakukan validasi. Penggunaannya menyederhanakan proses serialisasi. Hal ini akan memudahkan kita membuat perubahan pada model tanpa harus kesulitan mengubah proses serialisasi karena *serializer* sudah melakukannya secara otomatis.
+
+3. Mengutip dari tutorial 7, autentikasi menentukan identitas pengirim dari sebuah *request*. Sementara itu, otorisasi menentukan hak akses apa yang diberikan pada pengirim tersebut. Pemeriksaannya harus dilakukan *in-server*. Jika hanya dilakukan di *front-end* dengan menyembunyikan tombol, *request* masih dapat dikirim melalui *search bar* pada *browser*.
+
+4. Pada setiap *session*, server akan mengirimkan token CRSF. Server akan melakukan pengecekan terhadap token CSRF tersebut pada *request* yang mengubah data. Hal ini dilakukan sebagai perlindungan dari serangan CSRF. Karena ini, *force_authenticate* tidak bisa membuktikan perlindungan dari serangan CSRF berjalan karena *force_authenticate* mem-*bypass* pengecekan token CSRF.
+
+
+### AI USAGE
+Seperti biasa, saya tidak menggunakan AI dalam pengerjaan tugas ini. Saya mengikuti template dan instruksi yang sudah ada di tutorial 7 serta melakukan sedikit perubahan dengan mencari referensi dari MDN Web Docs, Django REST Docs, dan Web3Schools.
+
+
 
 ### Referensi
 
@@ -100,6 +117,7 @@ CSS:
 - overflow CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/overflow
 - overflow-y CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/overflow-y
 - padding CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/padding
+- pointer-events CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/pointer-events
 - scroll-snap-type CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scroll-snap-type
 - scrollbar-width CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-width
 - white-space CSS property: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space
@@ -113,6 +131,11 @@ JavaScript:
 
 Web API:
 - HTMLButtonElement: popoverTargetElement property: https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/popoverTargetElement
+
+
+HTTP:
+- HTTP request methods: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods
+- HTTP response status codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
 
 
 Django:
@@ -143,9 +166,14 @@ Django Decorators:
 - @permission_required decorator: https://docs.djangoproject.com/en/5.2/topics/auth/default/#django.contrib.auth.decorators.permission_required
 
 
+Django REST:
+- Parsers: https://www.django-rest-framework.org/api-guide/parsers/
+
+
 W3Schools:
 - How TO - Horizontal Scroll Menu: https://www.w3schools.com/howto/howto_css_menu_horizontal_scroll.asp
 - An image as a link - W#Schools Tryit Editor: https://www.w3schools.com/html/tryit.asp?filename=tryhtml_links_image
+- JavaScript Array Iterations: https://www.w3schools.com/js/js_array_iteration.asp
 - JavaScript JSON vs XML: https://www.w3schools.com/jS/js_json_xml.asp
 
 
